@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { restaurantDetails } from './response';
 
-export const merchantAPI = axios.create({
+export const getAllRestaurants = axios.create({
   baseURL: 'http://localhost:9090/food-ordering/merchants/restaurants/', // Your backend API URL
 });
 
@@ -18,3 +19,12 @@ export const postRestaurantDetails = async (restaurantDetail) => {
     throw error;
   }
 };
+
+
+export const fetchRestaurantDetails = async (restaurantId) => {
+
+    // const response = axios.get("http://localhost:9090/food-ordering/merchants/items/" + restaurantId);
+    // return response.data.restaurants
+    return restaurantDetails.restaurants
+  
+}

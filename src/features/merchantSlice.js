@@ -1,45 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { merchantAPI,postRestaurantDetails } from "../utils/api";
+import { getAllRestaurants,postRestaurantDetails } from "../utils/api";
 import axios from 'axios'
+import {restaurantListData}  from '../utils/response'
 
-// const restaurantData = {
-//   "message": "Retrieved 3 restaurants.",
-//   "restaurants": [
-//       {
-//           "restaurantId": 11,
-//           "name": "The Gourmet Spot",
-//           "description": "A fine dining restaurant with exquisite cuisine.",
-//           "address": "123 Main Street, Cityville",
-//           "contact": "123-456-7890",
-//           "merchantId": 10,
-//           "available": true
-//       },
-//       {
-//           "restaurantId": 12,
-//           "name": "Pizza Palace",
-//           "description": "Best pizza in town with freshly baked ingredients.",
-//           "address": "456 Elm Street, Townsville",
-//           "contact": "987-654-3210",
-//           "merchantId": 10,
-//           "available": true
-//       },
-//       {
-//           "restaurantId": 14,
-//           "name": "Sushi World",
-//           "description": "Fresh sushi with an authentic experience.",
-//           "address": "101 Maple Drive, Suburbia",
-//           "contact": "333-444-5555",
-//           "merchantId": 10,
-//           "available": true
-//       }
-//   ]
-// }
 
 export const getRestaurants = createAsyncThunk(
   "merchant/getRestaurants",
   async (merchantId) => {
-    const response = await merchantAPI.get(`${merchantId}`); //api will return actaul data once its ready
-    return  response.data.restaurants;
+    // const response = await getAllRestaurants.get(`${merchantId}`); //api will return actaul data once its ready
+    // return  response.data.restaurants;
+    return restaurantListData.restaurants
   }
 );
 
@@ -56,7 +26,7 @@ export const addRestaurant = createAsyncThunk(
   }
 );
 
-const initialState = {
+const restaurantListInitialState = {
   restaurants: [],
   loading: false,
   error: null,
@@ -64,7 +34,7 @@ const initialState = {
 
 export const merchantSlice = createSlice({
   name: "merchants",
-  initialState,
+  initialState: restaurantListInitialState,
   reducers: {
     addRestaurant(state, action) {
       state.list.push(action.payload);

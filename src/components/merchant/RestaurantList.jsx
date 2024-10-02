@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addRestaurant, getRestaurants } from "../../features/merchantSlice";
 import {
   CircularProgress,
-  Grid,
+  Grid2,
   Card,
   CardContent,
   Typography,
@@ -46,6 +46,7 @@ const modalStyle = {
 export const RestaurantList = () => {
   const { id } = useParams(); // Get the merchant id
   const dispatch = useDispatch();
+  const navigate =useNavigate()
   const { restaurants, loading, error } = useSelector(
     (state) => state.merchants
   );
@@ -60,16 +61,14 @@ export const RestaurantList = () => {
     menuFile: null, // To hold the file input
   });
 
-  useEffect(()=>{
-
-  },[restaurants])
+  useEffect(() => {}, [restaurants]);
 
   // Fetch restaurants when component mounts
   useEffect(() => {
     if (id) {
       dispatch(getRestaurants(id));
     }
-  }, [dispatch,id]);
+  }, [dispatch, id]);
 
   // Handle opening/closing the modal
   const handleOpenModal = () => setOpenModal(true);
@@ -116,130 +115,156 @@ export const RestaurantList = () => {
     handleCloseModal(); // Close the modal after submission
   };
 
+  //navigate to restaurant details page
+  const navigateToRestaurantDetailPage = (restaurantId) =>{
+    console.log(restaurantId)
+    navigate(`/merchants/items/${restaurantId}`)
+  }
+
   if (loading) {
     return <CircularProgress />;
   }
 
   if (error) return <Typography>Error: {error}</Typography>;
 
-
-
   return (
     <>
-      <Grid container spacing={6} sx={{ margin: "20px" }} direction="column">
-        <Grid item>
-          <Button variant="contained" color="primary" onClick={handleOpenModal}>
-            Add Restaurant
-          </Button>
-        </Grid>
-
-        <Grid item>
-          {restaurants ? (
-            restaurants?.map((restaurant) => (
-              <Grid item xs={12} md={4} key={restaurant?.restaurantId}>
-                <Card>
-                  <CardContent>
-                    <Typography variant="h5">{restaurant?.name}</Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      {restaurant?.description}
-                    </Typography>
-                    <Typography variant="body2">
-                      {restaurant?.address}
-                    </Typography>
-                    <Typography variant="body2">
-                      Contact: {restaurant?.contact}
-                    </Typography>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() =>
-                        alert(`Redirect to menu of ${restaurant?.name}`)
-                      }
-                    >
-                      View Menu
-                    </Button>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))
-          ) : (
-            <Typography>No restaurants found for this merchant.</Typography>
-          )}
-        </Grid>
-
-        {/* Modal for Adding Restaurant */}
-        <Modal open={openModal} onClose={handleCloseModal}>
-          <Box sx={modalStyle}>
-            <Typography variant="h6" component="h2" mb={2}>
+      <div style={{ height: "170vh" }}>
+        <Grid2
+          container
+          rowSpacing={8}
+          columnSpacing={5}
+          sx={{ margin: "20px" }}
+          direction="column"
+        >
+          <Grid2 item>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleOpenModal}
+            >
               Add Restaurant
-            </Typography>
-            <FormGroup>
-              <TextField
-                label="Restaurant Name"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                margin="normal"
-                fullWidth
-              />
-              <TextField
-                label="Description"
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                margin="normal"
-                fullWidth
-              />
-              <TextField
-                label="Address"
-                name="address"
-                value={formData.address}
-                onChange={handleInputChange}
-                margin="normal"
-                fullWidth
-              />
-              <TextField
-                label="Contact"
-                name="contact"
-                value={formData.contact}
-                onChange={handleInputChange}
-                margin="normal"
-                fullWidth
-              />
+            </Button>
+          </Grid2>
 
-              {/* File input */}
-              <Button
-                component="label"
-                role={undefined}
-                variant="contained"
-                tabIndex={-1}
-                startIcon={<CloudUploadIcon />}
-              >
-                Upload Menu File
-                <VisuallyHiddenInput
-                  id="fileInput"
-                  type="file"
-                  name="menuFile"
-                  onChange={handleFileChange} // Handle file change
+          <Grid2 container spacing={4}  >
+            {restaurants ? (
+              restaurants?.map((restaurant) => (
+                <Grid2
+                  item
+                  key={restaurant?.restaurantId}
+                  xs={12}  // Full width on extra small screens
+                  sm={6}   // Half width on small screens
+                  md={4}   // One-third width on medium screens
+                >
+                  <Card >
+                    <CardContent>
+                      <Typography variant="h5">{restaurant?.name}</Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {restaurant?.description}
+                      </Typography>
+                      <Typography variant="body2">
+                        {restaurant?.address}
+                      </Typography>
+                      <Typography variant="body2">
+                        Contact: {restaurant?.contact}
+                      </Typography>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() =>
+                          navigateToRestaurantDetailPage(restaurant?.restaurantId)
+                        }
+                      >
+                        View Menu
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </Grid2>
+              ))
+            ) : (
+              <Typography>No restaurants found for this merchant.</Typography>
+            )}
+          </Grid2>
+
+          {/* Modal for Adding Restaurant */}
+          <Modal open={openModal} onClose={handleCloseModal}>
+            <Box sx={modalStyle}>
+              <Typography variant="h6" component="h2" mb={2}>
+                Add Restaurant
+              </Typography>
+              <FormGroup>
+                <TextField
+                  label="Restaurant Name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  margin="normal"
+                  fullWidth
                 />
-              </Button>
-            </FormGroup>
-            <Box mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleCloseModal}
-                sx={{ marginRight: 2 }}
-              >
-                Cancel
-              </Button>
-              <Button variant="contained" color="primary" onClick={handleSubmit}>
-                Submit
-              </Button>
+                <TextField
+                  label="Description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  margin="normal"
+                  fullWidth
+                />
+                <TextField
+                  label="Address"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  margin="normal"
+                  fullWidth
+                />
+                <TextField
+                  label="Contact"
+                  name="contact"
+                  value={formData.contact}
+                  onChange={handleInputChange}
+                  margin="normal"
+                  fullWidth
+                />
+
+                {/* File input */}
+                <Button
+                  component="label"
+                  role={undefined}
+                  variant="contained"
+                  tabIndex={-1}
+                  startIcon={<CloudUploadIcon />}
+                >
+                  Upload Menu File
+                  <VisuallyHiddenInput
+                    id="fileInput"
+                    type="file"
+                    name="menuFile"
+                    onChange={handleFileChange} // Handle file change
+                  />
+                </Button>
+              </FormGroup>
+              <Box mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleCloseModal}
+                  sx={{ marginRight: 2 }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSubmit}
+                >
+                  Submit
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        </Modal>
-      </Grid>
+          </Modal>
+        </Grid2>
+      </div>
     </>
   );
 };
