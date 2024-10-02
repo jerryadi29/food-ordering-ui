@@ -14,30 +14,30 @@ import {
   TextField,
   FormGroup,
   FormControlLabel,
-  styled
+  styled,
 } from "@mui/material";
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
   height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
+  overflow: "hidden",
+  position: "absolute",
   bottom: 0,
   left: 0,
-  whiteSpace: 'nowrap',
+  whiteSpace: "nowrap",
   width: 1,
 });
 
 // Modal box styling
 const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: 'background.paper',
+  bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
   borderRadius: 2,
@@ -78,11 +78,13 @@ export const RestaurantList = () => {
 
   // Handle form submission
   const handleSubmit = () => {
+    const fileInput = document.querySelector("#fileInput"); // Assuming file input exists in the DOM
+    const file = fileInput.files[0];
     const restaurantData = {
       ...formData,
       merchantId: id, // Pass merchantId
+      menuFile: file, // xls file
     };
-    console.log(restaurantData);
     dispatch(addRestaurant(restaurantData));
     handleCloseModal(); // Close the modal after submission
   };
@@ -112,7 +114,9 @@ export const RestaurantList = () => {
                     <Typography variant="body2" color="textSecondary">
                       {restaurant.description}
                     </Typography>
-                    <Typography variant="body2">{restaurant.address}</Typography>
+                    <Typography variant="body2">
+                      {restaurant.address}
+                    </Typography>
                     <Typography variant="body2">
                       Contact: {restaurant.contact}
                     </Typography>
@@ -173,8 +177,22 @@ export const RestaurantList = () => {
                 margin="normal"
                 fullWidth
               />
+              <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload files
+                <VisuallyHiddenInput
+                  type="file"
+                  onChange={(event) => console.log(event.target.files)}
+                  multiple
+                />
+              </Button>
             </FormGroup>
-            <Box mt={2} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Box mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Button
                 variant="contained"
                 color="secondary"
@@ -183,7 +201,11 @@ export const RestaurantList = () => {
               >
                 Cancel
               </Button>
-              <Button variant="contained" color="primary" onClick={handleSubmit}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSubmit}
+              >
                 Submit
               </Button>
             </Box>
