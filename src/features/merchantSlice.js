@@ -1,50 +1,60 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { merchantAPI } from "../utils/api";
+import { merchantAPI,postRestaurantDetails } from "../utils/api";
 import axios from 'axios'
 
-const restaurantData = {
-  "message": "Retrieved 3 restaurants.",
-  "restaurants": [
-      {
-          "restaurantId": 11,
-          "name": "The Gourmet Spot",
-          "description": "A fine dining restaurant with exquisite cuisine.",
-          "address": "123 Main Street, Cityville",
-          "contact": "123-456-7890",
-          "merchantId": 10,
-          "available": true
-      },
-      {
-          "restaurantId": 12,
-          "name": "Pizza Palace",
-          "description": "Best pizza in town with freshly baked ingredients.",
-          "address": "456 Elm Street, Townsville",
-          "contact": "987-654-3210",
-          "merchantId": 10,
-          "available": true
-      },
-      {
-          "restaurantId": 14,
-          "name": "Sushi World",
-          "description": "Fresh sushi with an authentic experience.",
-          "address": "101 Maple Drive, Suburbia",
-          "contact": "333-444-5555",
-          "merchantId": 10,
-          "available": true
-      }
-  ]
-}
-export const getRestaurants = createAsyncThunk('merchant/fetchRestaurants', async (merchantId) => {
-  // const response = await axios.get(merchantAPI+merchantId); //api will return actaul data once its ready
-  return restaurantData.restaurants; 
-});
+// const restaurantData = {
+//   "message": "Retrieved 3 restaurants.",
+//   "restaurants": [
+//       {
+//           "restaurantId": 11,
+//           "name": "The Gourmet Spot",
+//           "description": "A fine dining restaurant with exquisite cuisine.",
+//           "address": "123 Main Street, Cityville",
+//           "contact": "123-456-7890",
+//           "merchantId": 10,
+//           "available": true
+//       },
+//       {
+//           "restaurantId": 12,
+//           "name": "Pizza Palace",
+//           "description": "Best pizza in town with freshly baked ingredients.",
+//           "address": "456 Elm Street, Townsville",
+//           "contact": "987-654-3210",
+//           "merchantId": 10,
+//           "available": true
+//       },
+//       {
+//           "restaurantId": 14,
+//           "name": "Sushi World",
+//           "description": "Fresh sushi with an authentic experience.",
+//           "address": "101 Maple Drive, Suburbia",
+//           "contact": "333-444-5555",
+//           "merchantId": 10,
+//           "available": true
+//       }
+//   ]
+// }
 
-export const addRestaurant = createAsyncThunk('merchant/addRestaurant', async (data) => {
-  // const response = await axios.post(merchantAPI+`/addRestaurant`, restaurantData);
-  restaurantData.restaurants.push(data)
-  console.log(data)
-  return restaurantData.restaurants;
-});
+export const getRestaurants = createAsyncThunk(
+  "merchant/getRestaurants",
+  async (merchantId) => {
+    const response = await merchantAPI.get(`${merchantId}`); //api will return actaul data once its ready
+    return  response.data.restaurants;
+  }
+);
+
+export const addRestaurant = createAsyncThunk(
+  "merchants/addRestaurant",
+  async (restaurantData) => {
+    try {
+      // Simulate a successful API response
+      const responsestatus =  postRestaurantDetails(restaurantData)
+      return responsestatus; // Mock adding a new restaurant
+    } catch (error) {
+     console.log(error)
+    }
+  }
+);
 
 const initialState = {
   restaurants: [],
