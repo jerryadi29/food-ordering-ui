@@ -4,23 +4,17 @@ export const merchantAPI = axios.create({
   baseURL: 'http://localhost:9090/food-ordering/merchants/restaurants/', // Your backend API URL
 });
 
-export const postRestaurantDetails = createAsyncThunk(
-  "merchant/addRestaurant",
-  async (formData) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:9090/food-ordering/merchants/addRestaurant",
-        formData, // Send FormData as body
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      return response.data; // Handle the response accordingly
-    } catch (error) {
-      console.error("Error adding restaurant:", error);
-      throw error;
-    }
+export const postRestaurantDetails = async (restaurantDetail) => {
+  try { // Send the FormData directly as the second argument
+    const response = await axios.post("http://localhost:9090/food-ordering/merchants/addRestaurant", restaurantDetail, {
+      headers: { // You don't need to set Content-Type explicitly as Axios will do it for FormData 
+        "Content-Type": "multipart/form-data",
+      },
+    }); // Return the response status 
+    return response.data.restaurantDetail;
   }
-);
+  catch (error) {
+    console.error("Error submitting restaurant details: ", error);
+    throw error;
+  }
+};

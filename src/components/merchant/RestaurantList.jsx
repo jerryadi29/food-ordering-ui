@@ -57,35 +57,62 @@ export const RestaurantList = () => {
     description: "",
     address: "",
     contact: "",
+    menuFile: null, // To hold the file input
   });
+
+  useEffect(()=>{
+
+  },[restaurants])
 
   // Fetch restaurants when component mounts
   useEffect(() => {
     if (id) {
       dispatch(getRestaurants(id));
     }
-  }, [dispatch, id]);
+  }, [dispatch,id]);
 
   // Handle opening/closing the modal
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
 
-  // Handle form change
+  // Handle form input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  // Handle file input change
+  const handleFileChange = (e) => {
+    setFormData({ ...formData, menuFile: e.target.files[0] }); // Save the selected file in the state
+  };
+
   // Handle form submission
-  const handleSubmit = () => {
-    const fileInput = document.querySelector("#fileInput"); // Assuming file input exists in the DOM
-    const file = fileInput.files[0];
-    const restaurantData = {
-      ...formData,
-      merchantId: id, // Pass merchantId
-      menuFile: file, // xls file
-    };
-    dispatch(addRestaurant(restaurantData));
+  const handleSubmit = async () => {
+    const file = formData.menuFile;
+
+    // Create FormData object to hold the JSON data and file
+    const formDataToSend = new FormData();
+    formDataToSend.append(
+      "restaurantDetails",
+      JSON.stringify({
+        name: formData.name,
+        description: formData.description,
+        address: formData.address,
+        contact: formData.contact,
+        merchantId: id, // Add merchantId
+      })
+    );
+
+    // Append file if present
+    if (file) {
+      formDataToSend.append("menuFile", file); // Assuming 'menuFile' is the key expected by backend
+    }
+
+    // Dispatch the action
+    dispatch(addRestaurant(formDataToSend));
+
+    await dispatch(getRestaurants(id));
+
     handleCloseModal(); // Close the modal after submission
   };
 
@@ -94,6 +121,8 @@ export const RestaurantList = () => {
   }
 
   if (error) return <Typography>Error: {error}</Typography>;
+
+
 
   return (
     <>
@@ -105,26 +134,26 @@ export const RestaurantList = () => {
         </Grid>
 
         <Grid item>
-          {restaurants && restaurants.length > 0 ? (
-            restaurants.map((restaurant) => (
-              <Grid item xs={12} md={4} key={restaurant.restaurantId}>
+          {restaurants ? (
+            restaurants?.map((restaurant) => (
+              <Grid item xs={12} md={4} key={restaurant?.restaurantId}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h5">{restaurant.name}</Typography>
+                    <Typography variant="h5">{restaurant?.name}</Typography>
                     <Typography variant="body2" color="textSecondary">
-                      {restaurant.description}
+                      {restaurant?.description}
                     </Typography>
                     <Typography variant="body2">
-                      {restaurant.address}
+                      {restaurant?.address}
                     </Typography>
                     <Typography variant="body2">
-                      Contact: {restaurant.contact}
+                      Contact: {restaurant?.contact}
                     </Typography>
                     <Button
                       variant="contained"
                       color="primary"
                       onClick={() =>
-                        alert(`Redirect to menu of ${restaurant.name}`)
+                        alert(`Redirect to menu of ${restaurant?.name}`)
                       }
                     >
                       View Menu
@@ -177,6 +206,8 @@ export const RestaurantList = () => {
                 margin="normal"
                 fullWidth
               />
+
+              {/* File input */}
               <Button
                 component="label"
                 role={undefined}
@@ -184,11 +215,12 @@ export const RestaurantList = () => {
                 tabIndex={-1}
                 startIcon={<CloudUploadIcon />}
               >
-                Upload files
+                Upload Menu File
                 <VisuallyHiddenInput
+                  id="fileInput"
                   type="file"
-                  onChange={(event) => console.log(event.target.files)}
-                  multiple
+                  name="menuFile"
+                  onChange={handleFileChange} // Handle file change
                 />
               </Button>
             </FormGroup>
@@ -201,11 +233,7 @@ export const RestaurantList = () => {
               >
                 Cancel
               </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSubmit}
-              >
+              <Button variant="contained" color="primary" onClick={handleSubmit}>
                 Submit
               </Button>
             </Box>

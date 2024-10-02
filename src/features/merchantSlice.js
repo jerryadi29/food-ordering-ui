@@ -96,7 +96,7 @@ export const merchantSlice = createSlice({
       })
       .addCase(addRestaurant.fulfilled, (state, action) => {
         state.loading = false;
-        state.restaurants = action.payload;
+        state.restaurants.push(action.payload); // Append the new restaurant
       })
       .addCase(addRestaurant.rejected, (state, action) => {
         state.loading = false;
