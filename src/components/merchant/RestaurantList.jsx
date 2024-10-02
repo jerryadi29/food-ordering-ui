@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addRestaurant, getRestaurants } from "../../features/merchantSlice";
-import { styled } from '@mui/material/styles';
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import {
+  addRestaurant,
+  getRestaurants,
+} from "../../features/merchantSlice";
 import {
   CircularProgress,
   Grid,
@@ -18,27 +19,14 @@ import {
   FormControlLabel,
 } from "@mui/material";
 
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
-
-
 // Modal box styling
 const modalStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
   width: 400,
-  bgcolor: "background.paper",
+  bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
   borderRadius: 2,
@@ -83,6 +71,7 @@ export const RestaurantList = () => {
       ...formData,
       merchantId: id, // Pass merchantId
     };
+    console.log(restaurantData)
     dispatch(addRestaurant(restaurantData));
     handleCloseModal(); // Close the modal after submission
   };
@@ -112,9 +101,7 @@ export const RestaurantList = () => {
                     <Typography variant="body2" color="textSecondary">
                       {restaurant.description}
                     </Typography>
-                    <Typography variant="body2">
-                      {restaurant.address}
-                    </Typography>
+                    <Typography variant="body2">{restaurant.address}</Typography>
                     <Typography variant="body2">
                       Contact: {restaurant.contact}
                     </Typography>
@@ -175,22 +162,8 @@ export const RestaurantList = () => {
                 margin="normal"
                 fullWidth
               />
-              <Button
-                component="label"
-                role={undefined}
-                variant="contained"
-                tabIndex={-1}
-                startIcon={<CloudUploadIcon />}
-              >
-                Upload files
-                <VisuallyHiddenInput
-                  type="file"
-                  onChange={(event) => console.log(event.target.files)}
-                  multiple
-                />
-              </Button>
             </FormGroup>
-            <Box mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Box mt={2} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Button
                 variant="contained"
                 color="secondary"
@@ -199,11 +172,7 @@ export const RestaurantList = () => {
               >
                 Cancel
               </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSubmit}
-              >
+              <Button variant="contained" color="primary" onClick={handleSubmit}>
                 Submit
               </Button>
             </Box>
