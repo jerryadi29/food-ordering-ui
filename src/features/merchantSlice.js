@@ -1,61 +1,50 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { merchantAPI } from "../utils/api";
-import axios from "axios";
+import axios from 'axios'
 
 const restaurantData = {
-  message: "Retrieved 3 restaurants.",
-  restaurants: [
-    {
-      restaurantId: 11,
-      name: "The Gourmet Spot",
-      description: "A fine dining restaurant with exquisite cuisine.",
-      address: "123 Main Street, Cityville",
-      contact: "123-456-7890",
-      merchantId: 10,
-      available: true,
-    },
-    {
-      restaurantId: 12,
-      name: "Pizza Palace",
-      description: "Best pizza in town with freshly baked ingredients.",
-      address: "456 Elm Street, Townsville",
-      contact: "987-654-3210",
-      merchantId: 10,
-      available: true,
-    },
-    {
-      restaurantId: 14,
-      name: "Sushi World",
-      description: "Fresh sushi with an authentic experience.",
-      address: "101 Maple Drive, Suburbia",
-      contact: "333-444-5555",
-      merchantId: 10,
-      available: true,
-    },
-  ],
-};
+  "message": "Retrieved 3 restaurants.",
+  "restaurants": [
+      {
+          "restaurantId": 11,
+          "name": "The Gourmet Spot",
+          "description": "A fine dining restaurant with exquisite cuisine.",
+          "address": "123 Main Street, Cityville",
+          "contact": "123-456-7890",
+          "merchantId": 10,
+          "available": true
+      },
+      {
+          "restaurantId": 12,
+          "name": "Pizza Palace",
+          "description": "Best pizza in town with freshly baked ingredients.",
+          "address": "456 Elm Street, Townsville",
+          "contact": "987-654-3210",
+          "merchantId": 10,
+          "available": true
+      },
+      {
+          "restaurantId": 14,
+          "name": "Sushi World",
+          "description": "Fresh sushi with an authentic experience.",
+          "address": "101 Maple Drive, Suburbia",
+          "contact": "333-444-5555",
+          "merchantId": 10,
+          "available": true
+      }
+  ]
+}
+export const getRestaurants = createAsyncThunk('merchant/fetchRestaurants', async (merchantId) => {
+  // const response = await axios.get(merchantAPI+merchantId); //api will return actaul data once its ready
+  return restaurantData.restaurants; 
+});
 
-export const getRestaurants = createAsyncThunk(
-  "merchant/getRestaurants",
-  async (merchantId) => {
-    // const response = await axios.get(merchantAPI+merchantId); //api will return actaul data once its ready
-    return restaurantData.restaurants;
-  }
-);
-
-export const addRestaurant = createAsyncThunk(
-  "merchants/addRestaurant",
-  async (restaurantData, { rejectWithValue }) => {
-    try {
-      // Simulate a successful API response
-      return restaurantData.restaurants[0]; // Mock adding a new restaurant
-    } catch (error) {
-      return rejectWithValue(
-        restaurantData.restaurants);
-    }
-  }
-);
-
+export const addRestaurant = createAsyncThunk('merchant/addRestaurant', async (data) => {
+  // const response = await axios.post(merchantAPI+`/addRestaurant`, restaurantData);
+  restaurantData.restaurants.push(data)
+  console.log(data)
+  return restaurantData.restaurants;
+});
 
 const initialState = {
   restaurants: [],
@@ -96,9 +85,8 @@ export const merchantSlice = createSlice({
         state.error = null;
       })
       .addCase(addRestaurant.fulfilled, (state, action) => {
-        state.restaurants.push(action.payload); // New restaurant gets added here
-
         state.loading = false;
+        state.restaurants = action.payload;
       })
       .addCase(addRestaurant.rejected, (state, action) => {
         state.loading = false;

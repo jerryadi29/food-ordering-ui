@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addRestaurant, getRestaurants } from "../../features/merchantSlice";
-import { styled } from '@mui/material/styles';
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import {
   CircularProgress,
   Grid,
@@ -16,20 +14,21 @@ import {
   TextField,
   FormGroup,
   FormControlLabel,
+  styled
 } from "@mui/material";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
   height: 1,
-  overflow: "hidden",
-  position: "absolute",
+  overflow: 'hidden',
+  position: 'absolute',
   bottom: 0,
   left: 0,
-  whiteSpace: "nowrap",
+  whiteSpace: 'nowrap',
   width: 1,
 });
-
 
 // Modal box styling
 const modalStyle = {
@@ -83,6 +82,7 @@ export const RestaurantList = () => {
       ...formData,
       merchantId: id, // Pass merchantId
     };
+    console.log(restaurantData);
     dispatch(addRestaurant(restaurantData));
     handleCloseModal(); // Close the modal after submission
   };
