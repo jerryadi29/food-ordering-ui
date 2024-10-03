@@ -215,7 +215,7 @@ export const RestaurantList = () => {
                 tabIndex={-1}
                 startIcon={<CloudUploadIcon />}
               >
-                Upload Menu File
+                Upload Menu
                 <VisuallyHiddenInput
                   id="fileInput"
                   type="file"
