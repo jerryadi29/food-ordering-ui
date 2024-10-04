@@ -18,7 +18,9 @@ export const addRestaurant = createAsyncThunk(
   async (restaurantData) => {
     try {
       // Simulate a successful API response
-      const responsestatus =  postRestaurantDetails(restaurantData)
+      const responsestatus = await postRestaurantDetails(restaurantData)
+      console.log("_____")
+      console.log(responsestatus);
       return responsestatus; // Mock adding a new restaurant
     } catch (error) {
      console.log(error)

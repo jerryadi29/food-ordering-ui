@@ -12,7 +12,9 @@ export const postRestaurantDetails = async (restaurantDetail) => {
         "Content-Type": "multipart/form-data",
       },
     }); // Return the response status 
-    return response.data.restaurantDetail;
+    console.log("-----I am hero-----")
+    console.log(response)
+    return response.data.restaurants[0];
   }
   catch (error) {
     console.error("Error submitting restaurant details: ", error);
