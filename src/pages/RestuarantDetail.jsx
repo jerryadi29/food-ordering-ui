@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getRestaurantDetails } from "../features/restaurantSlice";
+import {
+  getRestaurantDetails,
+  addRestaurantDetails,
+} from "../features/restaurantSlice";
 import {
   Table,
   TableBody,
@@ -24,6 +27,7 @@ import {
   TableSortLabel,
 } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 // Comparator function for sorting
 const descendingComparator = (a, b, orderBy) => {
@@ -56,6 +60,8 @@ const sortedRows = (rows, comparator) => {
 export const RestuarantDetail = () => {
   const { restaurantId } = useParams(); // Get the merchant id
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -64,11 +70,15 @@ export const RestuarantDetail = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const { details, loading, error } = useSelector((state) => state.restaurant);
   const [editRows, setEditRows] = useState({});
+  const [isConfirmedEdit, setIsConfirmedEdit] = useState(false);
 
   const rows = details;
+
   useEffect(() => {
     dispatch(getRestaurantDetails(restaurantId));
-  }, [restaurantId]);
+    setEditRows({})
+  }, [restaurantId, isConfirmedEdit]);
+
   // Handle sorting request
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -129,6 +139,20 @@ export const RestuarantDetail = () => {
   };
 
   const handleConfirmAction = () => {
+    const updatedRestaurantData = details.map((eachItem) => {
+      if (eachItem.id === parseInt(Object.keys(editRows)[0])) {
+        return { ...eachItem, ...Object.values(editRows)[0] };
+      }
+      return eachItem;
+    });
+    dispatch(addRestaurantDetails(updatedRestaurantData));
+    handleCloseDialog();
+    setIsConfirmedEdit(true);
+    setSelected([]);
+    setEditRows({});
+  };
+
+  const handleOpenDialog = () => {
     setOpenDialog(true);
   };
 
@@ -137,22 +161,27 @@ export const RestuarantDetail = () => {
   };
 
   const handleConfirmDialog = () => {
-    console.log("Rows confirmed:", selected);
-    console.log("Edited data:", editRows);
+    // console.log("Rows confirmed:", selected);
+    // console.log("Edited data:", editRows);
     setOpenDialog(false);
-    setSelected([]);
-    setEditRows({});
+  
   };
   // Memoize sorted rows
   const memoizedRows = useMemo(
     () => sortedRows(rows, getComparator(order, orderBy)),
     [rows, order, orderBy]
   );
-
   return (
     <>
       <Paper>
         <Toolbar>
+          <Button
+            startDecorator={<ArrowBackIosIcon />}
+            color="danger"
+            onClick={() => navigate(`${location.state?.from}`)}
+          >
+            Back
+          </Button>
           {selected.length > 0 && (
             <Typography
               variant="subtitle1"
@@ -167,7 +196,7 @@ export const RestuarantDetail = () => {
             <Button
               color="primary"
               variant="contained"
-              onClick={handleConfirmAction}
+              onClick={handleOpenDialog}
             >
               Confirm Action
             </Button>
@@ -176,7 +205,7 @@ export const RestuarantDetail = () => {
 
         <TableContainer>
           <Table>
-            <TableHead>
+            <TableHead sx={{ backgroundColor: "#42a5f5" }}>
               <TableRow>
                 <TableCell padding="checkbox">
                   <Checkbox
@@ -220,13 +249,14 @@ export const RestuarantDetail = () => {
                   </TableSortLabel>
                 </TableCell>
                 <TableCell>Description</TableCell>
-                <TableCell>additionalCustomizations</TableCell>
-                <TableCell>quantityAvailable</TableCell>
-                <TableCell>availableTime</TableCell>
-                <TableCell>maxQuantityPerOrder</TableCell>
-                <TableCell>available</TableCell>
+                <TableCell>Additional Customizations</TableCell>
+                <TableCell>Quantity Available</TableCell>
+                <TableCell>Available Time</TableCell>
+                <TableCell>Max Quantity Per Order</TableCell>
+                <TableCell>Available</TableCell>
               </TableRow>
             </TableHead>
+
             <TableBody>
               {memoizedRows
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -348,8 +378,10 @@ export const RestuarantDetail = () => {
                             }
                             fullWidth
                           />
+                        ) : row.available.toString() === "true" ? (
+                          "Yes"
                         ) : (
-                          row.available
+                          "No"
                         )}
                       </TableCell>
                     </TableRow>
@@ -372,7 +404,7 @@ export const RestuarantDetail = () => {
 
       {/* Confirmation Modal */}
       <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Confirm Action</DialogTitle>
+        <DialogTitle>Confirm</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Are you sure you want to confirm {selected.length} selected rows?
@@ -382,7 +414,7 @@ export const RestuarantDetail = () => {
           <Button onClick={handleCloseDialog} color="secondary">
             Cancel
           </Button>
-          <Button onClick={handleConfirmDialog} color="primary">
+          <Button onClick={handleConfirmAction} color="primary">
             Confirm
           </Button>
         </DialogActions>

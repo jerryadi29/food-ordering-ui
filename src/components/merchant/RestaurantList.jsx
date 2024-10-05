@@ -46,7 +46,7 @@ const modalStyle = {
 export const RestaurantList = () => {
   const { id } = useParams(); // Get the merchant id
   const dispatch = useDispatch();
-  const navigate =useNavigate()
+  const navigate = useNavigate();
   const { restaurants, loading, error } = useSelector(
     (state) => state.merchants
   );
@@ -89,6 +89,8 @@ export const RestaurantList = () => {
   const handleSubmit = async () => {
     const file = formData.menuFile;
 
+    
+
     // Create FormData object to hold the JSON data and file
     const formDataToSend = new FormData();
     formDataToSend.append(
@@ -101,6 +103,8 @@ export const RestaurantList = () => {
         merchantId: id, // Add merchantId
       })
     );
+
+    if(!formData.name || ! formData.description || !formData.address ||  )
 
     // Append file if present
     if (file) {
@@ -116,10 +120,12 @@ export const RestaurantList = () => {
   };
 
   //navigate to restaurant details page
-  const navigateToRestaurantDetailPage = (restaurantId) =>{
-    console.log(restaurantId)
-    navigate(`/merchants/items/${restaurantId}`)
-  }
+  const navigateToRestaurantDetailPage = (restaurantId) => {
+    console.log(restaurantId);
+    navigate(`/merchants/items/${restaurantId}`, {
+      state: { from: `/merchants/restaurants/${id}` }, // Pass the previous URL in state
+    });
+  };
 
   if (loading) {
     return <CircularProgress />;
@@ -147,17 +153,17 @@ export const RestaurantList = () => {
             </Button>
           </Grid2>
 
-          <Grid2 container spacing={4}  >
+          <Grid2 container spacing={4}>
             {restaurants ? (
               restaurants?.map((restaurant) => (
                 <Grid2
                   item
                   key={restaurant?.restaurantId}
-                  xs={12}  // Full width on extra small screens
-                  sm={6}   // Half width on small screens
-                  md={4}   // One-third width on medium screens
+                  xs={12} // Full width on extra small screens
+                  sm={6} // Half width on small screens
+                  md={4} // One-third width on medium screens
                 >
-                  <Card >
+                  <Card>
                     <CardContent>
                       <Typography variant="h5">{restaurant?.name}</Typography>
                       <Typography variant="body2" color="textSecondary">
@@ -173,7 +179,9 @@ export const RestaurantList = () => {
                         variant="contained"
                         color="primary"
                         onClick={() =>
-                          navigateToRestaurantDetailPage(restaurant?.restaurantId)
+                          navigateToRestaurantDetailPage(
+                            restaurant?.restaurantId
+                          )
                         }
                       >
                         View Menu
@@ -195,6 +203,7 @@ export const RestaurantList = () => {
               </Typography>
               <FormGroup>
                 <TextField
+                  required
                   label="Restaurant Name"
                   name="name"
                   value={formData.name}
@@ -203,6 +212,7 @@ export const RestaurantList = () => {
                   fullWidth
                 />
                 <TextField
+                  required
                   label="Description"
                   name="description"
                   value={formData.description}
@@ -211,6 +221,7 @@ export const RestaurantList = () => {
                   fullWidth
                 />
                 <TextField
+                  required
                   label="Address"
                   name="address"
                   value={formData.address}
@@ -219,6 +230,7 @@ export const RestaurantList = () => {
                   fullWidth
                 />
                 <TextField
+                  required
                   label="Contact"
                   name="contact"
                   value={formData.contact}
