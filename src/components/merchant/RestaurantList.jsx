@@ -47,6 +47,7 @@ export const RestaurantList = () => {
   const { id } = useParams(); // Get the merchant id
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const navigate = useNavigate();
   const { restaurants, loading, error } = useSelector(
     (state) => state.merchants
   );
@@ -103,8 +104,6 @@ export const RestaurantList = () => {
         merchantId: id, // Add merchantId
       })
     );
-
-   
 
     // Append file if present
     if (file) {
