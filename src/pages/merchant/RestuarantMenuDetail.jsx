@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getRestaurantDetails,
   addRestaurantDetails,
-} from "../features/restaurantSlice";
+} from "../../features/merchantMenuDetailSlice";
 import {
   Table,
   TableBody,
@@ -57,7 +57,7 @@ const sortedRows = (rows, comparator) => {
   return stabilizedRows.map((el) => el[0]);
 };
 
-export const RestuarantDetail = () => {
+export const RestuarantMenuDetail = () => {
   const { restaurantId } = useParams(); // Get the merchant id
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -68,16 +68,18 @@ export const RestuarantDetail = () => {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("itemName");
   const [openDialog, setOpenDialog] = useState(false);
-  const { details, loading, error } = useSelector((state) => state.restaurant);
+  const { details, loading, error } = useSelector((state) => state.merchantMenuDetail);
   const [editRows, setEditRows] = useState({});
   const [isConfirmedEdit, setIsConfirmedEdit] = useState(false);
 
   const rows = details;
 
   useEffect(() => {
-    dispatch(getRestaurantDetails(restaurantId));
-    setEditRows({})
-  }, [restaurantId, isConfirmedEdit]);
+    if (restaurantId) {
+      dispatch(getRestaurantDetails(restaurantId));
+    }
+    setEditRows({});
+  }, [restaurantId, isConfirmedEdit, dispatch]);
 
   // Handle sorting request
   const handleRequestSort = (property) => {
@@ -148,8 +150,6 @@ export const RestuarantDetail = () => {
     dispatch(addRestaurantDetails(updatedRestaurantData));
     handleCloseDialog();
     setIsConfirmedEdit(true);
-    setSelected([]);
-    setEditRows({});
   };
 
   const handleOpenDialog = () => {
@@ -160,12 +160,6 @@ export const RestuarantDetail = () => {
     setOpenDialog(false);
   };
 
-  const handleConfirmDialog = () => {
-    // console.log("Rows confirmed:", selected);
-    // console.log("Edited data:", editRows);
-    setOpenDialog(false);
-  
-  };
   // Memoize sorted rows
   const memoizedRows = useMemo(
     () => sortedRows(rows, getComparator(order, orderBy)),

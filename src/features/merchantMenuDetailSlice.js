@@ -1,14 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
-  fetchRestaurantDetails,
-  postUpdatedRestaurantDetails,
+  fetchMerchantRestaurantDetails,
+  postUpdatedMerchantRestaurantDetails,
 } from "../utils/api";
 
 export const getRestaurantDetails = createAsyncThunk(
-  "restaurant/getRestaurantDetails",
+  "client/getRestaurantDetails",
   async (restaurantId) => {
     try {
-      const response = await fetchRestaurantDetails(restaurantId);
+      const response = await fetchMerchantRestaurantDetails(restaurantId);
       return response;
     } catch (error) {
       console.log(error);
@@ -17,10 +17,10 @@ export const getRestaurantDetails = createAsyncThunk(
 );
 
 export const addRestaurantDetails = createAsyncThunk(
-  "restaurant/addRestaurantDetails",
+  "client/addRestaurantDetails",
   async (restaurantDetail) => {
     try {
-      const response = await postUpdatedRestaurantDetails(restaurantDetail);
+      const response = await postUpdatedMerchantRestaurantDetails(restaurantDetail);
       return response;
     } catch (error) {
       console.log(error);
@@ -34,8 +34,8 @@ const restaurantDetailInitialState = {
   error: null,
 };
 
-export const restaurantDetailSlice = createSlice({
-  name: "restaurant",
+export const merchantMenuDetailSlice = createSlice({
+  name: "merchantMenuDetail",
   initialState: restaurantDetailInitialState,
   extraReducers: (builder) => {
     builder

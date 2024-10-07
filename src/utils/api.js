@@ -1,11 +1,18 @@
 import axios from "axios";
-import { restaurantDetails } from "./response";
+import {
+  restaurantDetails,
+  clientRestaurantDetail,
+  clientMenuDetail,
+} from "./response";
 
-export const getAllRestaurants = axios.create({
+/**
+ * Merchant API
+ */
+export const getAllMerchantRestaurants = axios.create({
   baseURL: "http://localhost:9090/food-ordering/merchants/restaurants/", // Your backend API URL
 });
 
-export const postRestaurantDetails = async (restaurantDetail) => {
+export const postMerchantRestaurantDetails = async (restaurantDetail) => {
   try {
     // Send the FormData directly as the second argument
     const response = await axios.post(
@@ -27,13 +34,15 @@ export const postRestaurantDetails = async (restaurantDetail) => {
   }
 };
 
-export const fetchRestaurantDetails = async (restaurantId) => {
+export const fetchMerchantRestaurantDetails = async (restaurantId) => {
   // const response = await axios.get("http://localhost:9090/food-ordering/merchants/items/" + restaurantId);
   // return response.data.restaurants
   return restaurantDetails.restaurants;
 };
 
-export const postUpdatedRestaurantDetails = async (restaurantDetails) => {
+export const postUpdatedMerchantRestaurantDetails = async (
+  restaurantDetails
+) => {
   try {
     // const response = await axios.put(
     //   "http://localhost:9090/food-ordering/merchants/update/item",
@@ -44,7 +53,63 @@ export const postUpdatedRestaurantDetails = async (restaurantDetails) => {
     //     },
     //   }
     // );
-    return restaurantDetails.restaurants
+    return restaurantDetails.restaurants;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * Client API
+ */
+export const getClientRestaurants = async (cityName) => {
+  try {
+    // const response = await axios.get(
+    //   `http://localhost:9090/food-ordering/users/get-restaurant/${cityName}`
+    // );
+    // return response.data.restaurants;
+    return clientRestaurantDetail.restaurants;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getClientRestaurantId = async (reastaurantId) => {
+  try {
+    // const response = await axios.get(
+    //   `http://localhost:9090/food-ordering/users/get-restaurant/${cityName}`
+    // );
+    // return response.data.restaurants;
+    return clientMenuDetail.restaurants;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ *
+ * @param {name, email, password} credentail
+ */
+export const postUserLoginDetails = async (credentail) => {
+  // const response = await axios.post(
+  //   "http://localhost:9090/auth/login",
+  //   credentials
+  // );
+  // return response.data;
+};
+
+export const postSignInDetails = async (credentials) => {
+  // const response = await axios.post(
+  //   "http://localhost:9090/auth/signup",
+  //   credentials
+  // );
+  // return response.data;
+};
+
+export const getUserDetails = async (Endpoint) => {
+  try {
+    // const response = await axios.get(Endpoint); // Endpoint to get current user
+    // return response.data;
   } catch (error) {
     console.log(error);
   }

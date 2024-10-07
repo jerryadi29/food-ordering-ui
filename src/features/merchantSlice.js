@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getAllRestaurants,postRestaurantDetails } from "../utils/api";
+import { getAllMerchantRestaurants,postMerchantRestaurantDetails } from "../utils/api";
 import axios from 'axios'
 import {restaurantListData}  from '../utils/response'
 
@@ -7,7 +7,7 @@ import {restaurantListData}  from '../utils/response'
 export const getRestaurants = createAsyncThunk(
   "merchant/getRestaurants",
   async (merchantId) => {
-    // const response = await getAllRestaurants.get(`${merchantId}`); //api will return actaul data once its ready
+    // const response = await getAllMerchantRestaurants.get(`${merchantId}`); //api will return actaul data once its ready
     // return  response.data.restaurants;
     return restaurantListData.restaurants
   }
@@ -18,7 +18,7 @@ export const addRestaurant = createAsyncThunk(
   async (restaurantData) => {
     try {
       // Simulate a successful API response
-      const responsestatus = await postRestaurantDetails(restaurantData)
+      const responsestatus = await postMerchantRestaurantDetails(restaurantData)
       console.log("_____")
       console.log(responsestatus);
       return responsestatus; // Mock adding a new restaurant

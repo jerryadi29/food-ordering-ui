@@ -43,10 +43,9 @@ const modalStyle = {
   borderRadius: 2,
 };
 
-export const RestaurantList = () => {
+export const AddRestaurantDetail = () => {
   const { id } = useParams(); // Get the merchant id
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const navigate = useNavigate();
   const { restaurants, loading, error } = useSelector(
     (state) => state.merchants
@@ -104,6 +103,8 @@ export const RestaurantList = () => {
         merchantId: id, // Add merchantId
       })
     );
+
+    if(!formData.name || ! formData.description || !formData.address){}
 
     // Append file if present
     if (file) {
