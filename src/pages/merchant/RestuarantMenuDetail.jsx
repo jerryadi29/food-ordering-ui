@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getRestaurantDetails,
   addRestaurantDetails,
-} from "../../features/merchantMenuDetailSlice";
+} from "../../features/merchant/merchantMenuDetailSlice";
 import {
   Table,
   TableBody,

@@ -10,8 +10,8 @@ import {
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { fetchClientMenuDetails } from "../../features/clientSlice";
 import { styled } from "@mui/material/styles";
+import { fetchItems } from "../../features/customer/customerMenuDetailSlice";
 
 const StyledCard = styled(Card)(({ theme }) => ({
   transition: "transform 0.2s, box-shadow 0.2s",
@@ -29,9 +29,10 @@ export const ClientRestaurantMenuDetail = () => {
   const [qty, setQty] = useState(0)
 
   useEffect(() => {
-    console.log(restaurantId);
-    dispatch(fetchClientMenuDetails(restaurantId));
-  }, [dispatch]);
+    if (restaurantId) {
+      dispatch(fetchItems(restaurantId));
+    }
+  }, [dispatch, restaurantId]);
 
   const handleOrderPlace = (orderID) => {
     navigate(`/client/orderplaced/${orderID}`);

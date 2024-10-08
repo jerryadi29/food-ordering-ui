@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addRestaurant, getRestaurants } from "../../features/merchantSlice";
+import { addRestaurant, getRestaurants } from "../../features/merchant/merchantSlice";
 import {
   CircularProgress,
   Grid2,

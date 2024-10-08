@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   fetchMerchantRestaurantDetails,
   postUpdatedMerchantRestaurantDetails,
-} from "../utils/api";
+} from "../../utils/api";
 
 export const getRestaurantDetails = createAsyncThunk(
   "client/getRestaurantDetails",

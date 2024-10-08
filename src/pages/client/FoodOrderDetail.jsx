@@ -8,10 +8,7 @@ import {
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchClientRestaurants,
-  userCreditDetail,
-} from "../../features/clientSlice";
+import { fetchRestaurants } from "../../features/customer/customerSlice";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -22,12 +19,6 @@ export const FoodOrderDetail = () => {
     (state) => state.client
   );
   const { user } = useSelector((state) => state.auth);
-  useEffect(() => {
-    // dispatch(userCreditDetail(10));
-    // if (userDetail) {
-    // }
-    dispatch(fetchClientRestaurants("Bangalore"));
-  }, [dispatch]);
 
   const handleViewMenu = (restaurantId) => {
     navigate(`/client/orders/${restaurantId}`);
@@ -42,7 +33,7 @@ export const FoodOrderDetail = () => {
   return (
     <>
       <Box sx={{ padding: 4 }}>
-        <Grid2 container spacing={4} >
+        <Grid2 container spacing={4}>
           {restaurantDetails.map((restaurant) => (
             <Grid2 item xs={12} md={4} key={restaurant.restaurantId}>
               <Card>

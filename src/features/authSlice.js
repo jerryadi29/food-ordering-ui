@@ -1,91 +1,203 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
-  postUserLoginDetails,
-  postSignInDetails,
   getUserDetails,
+  postSignInDetails,
+  postSignUpDetails,
+  getClientCreditDetails,
 } from "../utils/api";
 
-export const loginUser = createAsyncThunk(
-  "auth/loginUser",
-  async (credentials) => {
+export const signinCustomer = createAsyncThunk(
+  "auth/login",
+  async ({ username, password, city, userType }, thunkAPI) => {
+    const credentials = { username, password, city, userType };
     try {
-      const response = await postUserLoginDetails(credentials);
-      return response;
+      const response = await postSignInDetails(
+        "/authentication/sign-in/customer",
+        credentials
+      );
+      return { ...response.data, userType: "customer" };
     } catch (error) {
-      console.log(error);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
 
-export const signupUser = createAsyncThunk(
-  "auth/signupUser",
-  async (userData, { rejectWithValue }) => {
+export const signupCustomer = createAsyncThunk(
+  "auth/signupCustomer",
+  async ({ email, password, city }, thunkAPI) => {
+    const credentials = { email, password, city };
+
     try {
-      const response = await postSignInDetails(userData);
-      return response;
+      const response = await postSignUpDetails(
+        "/authentication/sign-up/customer",
+        credentials
+      );
+      return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(
+        error.response.data.message || "Signup Failed"
+      );
     }
   }
 );
 
-// Thunk for checking authentication status (optional)
-export const checkAuth = createAsyncThunk("auth/checkAuth", async () => {
-  const response = await getUserDetails();
-  return response;
-});
+// Login for Merchant
+export const signinMerchant = createAsyncThunk(
+  "auth/loginMerchant",
+  async ({ email, password, userType }, thunkAPI) => {
+    try {
+      const response = await postSignInDetails(
+        "/authentication/sign-in/merchant",
+        {
+          email,
+          password,
+        }
+      );
+      return { ...response.data, userType: "merchant" };
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response.data.message || "Login Failed"
+      );
+    }
+  }
+);
+
+// Signup for Merchant
+export const signupMerchant = createAsyncThunk(
+  "auth/signupMerchant",
+  async ({ email, password }, thunkAPI) => {
+    try {
+      const response = await postSignUpDetails(
+        "/authentication/sign-up/merchant",
+        {
+          email,
+          password,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response.data.message || "Signup Failed"
+      );
+    }
+  }
+);
+
+export const fetchCredit = createAsyncThunk(
+  "auth/fetchCredit",
+  async (customerId, thunkAPI) => {
+    try {
+      const response = await getClientCreditDetails(
+        `/users/getCredit/${customerId}`
+      );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response.data.message || "Fetching Credit Failed"
+      );
+    }
+  }
+);
+
+// Async thunk for user logout
+export const logout = createAsyncThunk("auth/logout", async () => {});
 
 export const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: null,
-    loading: false,
-    token: null,
+    credit: 0,
+    status: "idle",
     error: null,
   },
-  reducers: {},
+  reducers: {
+    setUser(state, action) {
+      state.user = action.payload;
+    },
+    logout(state) {
+      state.user = null;
+      state.credit = 0;
+      state.status = "idle";
+      state.error = null;
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+    },
+  },
   extraReducers: (builder) => {
-    builder
-      .addCase(loginUser.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.user = action.payload;
-        state.token = action.payload.token;
-        state.loading = false;
-      })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.error = action.error.message;
-        state.loading = false;
-      });
+    // Customer Sign-Up
+    builder.addCase(signupCustomer.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(signupCustomer.fulfilled, (state, action) => {
+      state.status = "succeeded";
+    });
+    builder.addCase(signupCustomer.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload;
+    });
 
-    builder
-      .addCase(signupUser.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(signupUser.fulfilled, (state, action) => {
-        state.user = action.payload;
-        state.token = action.payload.token;
-        state.loading = false;
-      })
-      .addCase(signupUser.rejected, (state, action) => {
-        state.error = action.error.message;
-        state.loading = false;
-      });
+    // Merchant Sign-Up
+    builder.addCase(signupMerchant.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(signupMerchant.fulfilled, (state, action) => {
+      state.status = "succeeded";
+    });
+    builder.addCase(signupMerchant.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload;
+    });
 
-    builder
-      .addCase(checkAuth.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(checkAuth.fulfilled, (state, action) => {
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.loading = false;
-      })
-      .addCase(checkAuth.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload.message || "Authentication failed";
-      });
+    // Customer Sign-In
+    builder.addCase(signinCustomer.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(signinCustomer.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      state.user = {
+        email: action.meta.arg.email,
+        customerId: action.payload.customerId,
+        city: action.payload.city,
+        role: "customer",
+      };
+      // Save to localStorage
+      localStorage.setItem("user", JSON.stringify(state.user));
+    });
+    builder.addCase(signinCustomer.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload;
+    });
+
+    // Merchant Sign-In
+    builder.addCase(signinMerchant.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(signinMerchant.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      state.user = {
+        email: action.meta.arg.email,
+        merchantId: action.payload.merchantId,
+        role: "merchant",
+      };
+      // Save to localStorage
+      localStorage.setItem("user", JSON.stringify(state.user));
+    });
+    builder.addCase(signinMerchant.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload;
+    });
+
+    // Fetch Credit
+    builder.addCase(fetchCredit.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(fetchCredit.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      state.credit = action.payload;
+    });
+    builder.addCase(fetchCredit.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload;
+    });
   },
 });

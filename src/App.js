@@ -9,12 +9,17 @@ import {
 } from "react-router-dom";
 import { AddRestaurantDetail } from "../src/pages/merchant/AddRestaurantDetail"; // Import the ProductList page
 import { RestuarantMenuDetail } from "../src/pages/merchant/RestuarantMenuDetail";
-import {  ClientRestaurantMenuDetail  } from "../src/pages/client/ClientRestaurantMenuDetail";
+import { ClientRestaurantMenuDetail } from "../src/pages/client/ClientRestaurantMenuDetail";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { NavigationBar } from "./components/NavigationBar";
-import { ClientDashboard } from "./pages/client/ClientDashboard";
 import { FoodOrderDetail } from "./pages/client/FoodOrderDetail";
 import { useSelector } from "react-redux";
+import { Login } from "./pages/Login";
+import Signup from "./pages/Signup";
+import CustomerDashboard from "./pages/client/CustomerDashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
+import MerchantDashboard from "./pages/merchant/MerchantDashboard";
+import Unauthorized from "./pages/Unauthorized";
 
 const theme = createTheme({
   typography: {
@@ -32,43 +37,73 @@ function App() {
         <NavigationBar />
 
         <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+
+          {/* Protected Routes for Customers */}
           <Route
-            path="/client/dashboard"
+            path="/customer-dashboard"
             element={
-              user && user.userType === "client" ? (
-                <ClientDashboard />
-              ) : (
-                <Navigate to="/login" />
-              )
+              <ProtectedRoute requiredRole="customer">
+                <CustomerDashboard />
+              </ProtectedRoute>
             }
           />
+
           <Route
-            path="/client/orders"
+            path="/customer/restuarantlist"
             element={
-              user && user.userType === "client" ? (
+              <ProtectedRoute requiredRole="customer">
                 <FoodOrderDetail />
-              ) : (
-                <Navigate to="/login" />
-              )
+              </ProtectedRoute>
             }
           />
-           <Route
-            path="client/orders/:id"
-            element={<ClientRestaurantMenuDetail />}
-          />
-          {/* <Route
-          path ='/client/orderplaced/:id'
-          element={<OrderPlace/>}/> */}
-
 
           <Route
-            path="/merchants/restaurants/:id"
-            element={<AddRestaurantDetail />}
+            path="/customer/restuarantlist/:restaurantid"
+            element={
+              <ProtectedRoute requiredRole="customer">
+                <ClientRestaurantMenuDetail />
+              </ProtectedRoute>
+            }
           />
+
+
+          {/* Protected Routes for Merchants */}
           <Route
-            path="/merchants/items/:restaurantId"
-            element={<RestuarantMenuDetail />}
+            path="/merchant-dashboard"
+            element={
+              <ProtectedRoute requiredRole="merchant">
+                <MerchantDashboard />
+              </ProtectedRoute>
+            }
           />
+
+          {/* Route for Restaurant Items */}
+          <Route
+            path="/merchants/addRestaurant/:restaurantId"
+            element={
+              <ProtectedRoute requiredRole="merchant">
+                <RestuarantMenuDetail />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/merchants/addRestaurant"
+            element={
+              <ProtectedRoute requiredRole="merchant">
+                <AddRestaurantDetail />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Unauthorized Access */}
+          <Route path="/unauthorized" element={<Unauthorized />} />
+
+          {/* Fallback Route */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </Router>
     </ThemeProvider>
