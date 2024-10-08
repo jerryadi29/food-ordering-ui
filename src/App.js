@@ -51,7 +51,7 @@ function App() {
 
           {/* Route for Restaurant Items */}
         <Route
-          path="/restaurant/:restaurantId"
+          path="merchants/items/:restaurantId"
           element={
             <ProtectedRoute requiredRole="customer">
                <ItemList />

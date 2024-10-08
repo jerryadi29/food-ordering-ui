@@ -1,13 +1,13 @@
 // src/slices/itemsSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from '../api/axiosConfig';
+import {axiosInstance} from '../../utils/api';
 
 // Async thunk to fetch items by restaurantId
 export const fetchItems = createAsyncThunk(
   'items/fetchItems',
   async (restaurantId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/merchants/items/${restaurantId}`);
+      const response = await axiosInstance.get(`/merchants/items/${restaurantId}`);
       return response.data.restaurants; // Assuming 'restaurants' contains the items
     } catch (error) {
       return rejectWithValue(error.response.data.message || 'Failed to fetch items');

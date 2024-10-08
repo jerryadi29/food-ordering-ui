@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "../../utils/api";
 
 // Fetch Restaurants by City
-export const fetchRestaurants = createAsyncThunk(
+export const fetchRestaurantsList = createAsyncThunk(
   "restaurants/fetchRestaurants",
   async (city, thunkAPI) => {
     try {

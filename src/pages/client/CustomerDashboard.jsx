@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCredit, fetchRestaurants } from '../../features/authSlice';
-import { fetchRestaurants as fetchRestaurantsList } from '../../features/customer/restaurantsSlice';
+import { fetchRestaurantsList  } from '../../features/customer/restaurantsSlice';
 import { useNavigate } from 'react-router-dom';
 import { Typography, Container, Box, Grid, Card, CardContent, CardActions, Button } from '@mui/material';
 import RestaurantCard from './RestaurantCard';
