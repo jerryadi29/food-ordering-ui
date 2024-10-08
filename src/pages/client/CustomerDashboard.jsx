@@ -1,55 +1,48 @@
 // src/components/CustomerDashboard.js
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchRestaurants } from '.../features/slices/restaurantsSlice';
+import { fetchCredit, fetchRestaurants } from '../../features/authSlice';
+import { fetchRestaurants as fetchRestaurantsList } from '../../features/customer/restaurantsSlice';
 import { useNavigate } from 'react-router-dom';
-import {
-  Container,
-  Typography,
-  Box,
-  Button,
-} from '@mui/material';
-import RestaurantList from './RestaurantList';
+import { Typography, Container, Box, Grid, Card, CardContent, CardActions, Button } from '@mui/material';
+import RestaurantCard from './RestaurantCard';
 
 const CustomerDashboard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
   const credit = useSelector((state) => state.auth.credit);
-  const restaurants = useSelector((state) => state.restaurants.list);
+  const restaurants = useSelector((state) => state.restaurants.restaurants);
   const restaurantsStatus = useSelector((state) => state.restaurants.status);
+  const restaurantsError = useSelector((state) => state.restaurants.error);
 
   useEffect(() => {
-    if (user && user.role === 'customer') {
-      dispatch(fetchRestaurants(user.city));
+    if (user && user.userType === 'customer') {
+      dispatch(fetchRestaurantsList(user.city));
     }
   }, [dispatch, user]);
 
-  const handleLogout = () => {
-    dispatch({ type: 'auth/logout' });
-    navigate('/login');
-  };
-
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>
-        <Typography variant="h4">Welcome, {user.email}</Typography>
-        <Box>
-          <Typography variant="h6">Credit: ₹{credit}</Typography>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleLogout}
-            sx={{ mt: 1 }}
-          >
-            Logout
-          </Button>
-        </Box>
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" gutterBottom>
+          Welcome, Customer!
+        </Typography>
+        <Typography variant="h6">Your Credit: ₹{credit}</Typography>
       </Box>
-      <Typography variant="h5" gutterBottom>
-        Restaurants in {user.city}
-      </Typography>
-      <RestaurantList />
+      <Box sx={{ mb: 2 }}>
+        <Typography variant="h5">Available Restaurants in {user.city}</Typography>
+      </Box>
+      <Grid container spacing={3}>
+        {restaurantsStatus === 'loading' && <Typography>Loading restaurants...</Typography>}
+        {restaurantsStatus === 'failed' && <Typography color="error">{restaurantsError}</Typography>}
+        {restaurantsStatus === 'succeeded' &&
+          restaurants.map((restaurant) => (
+            <Grid item xs={12} sm={6} md={4} key={restaurant.restaurantId}>
+              <RestaurantCard restaurant={restaurant} />
+            </Grid>
+          ))}
+      </Grid>
     </Container>
   );
 };

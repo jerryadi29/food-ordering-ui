@@ -2,15 +2,15 @@ import { configureStore } from "@reduxjs/toolkit";
 import { merchantSlice } from "../features/merchant/merchantSlice";
 import { merchantMenuDetailSlice } from "../features/merchant/merchantMenuDetailSlice";
 import { authSlice } from "../features/authSlice";
-import { customerSlice } from "../features/customer/customerSlice";
-import { customerMenuDetailSlice } from "../features/customer/customerMenuDetailSlice";
+import restaurantsReducer from '../features/customer/restaurantsSlice';
+import itemsReducer from '../features/customer/itemsSlice';
 
 export const store = configureStore({
   reducer: {
     auth: authSlice.reducer,
     merchants : merchantSlice.reducer,
-    customer : customerSlice.reducer,
-    customerMenuDetail : customerMenuDetailSlice.reducer,
     merchantMenuDetail: merchantMenuDetailSlice.reducer,
+    restaurants: restaurantsReducer,
+    items: itemsReducer,
   },
 });
