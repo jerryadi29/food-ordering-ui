@@ -35,7 +35,7 @@ export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const [credentials, setCredentials] = useState({
-    name: null,
+    email: null,
     password: null,
     userType: "customer",
   });
@@ -53,18 +53,18 @@ export const Login = () => {
 
     try {
       if (credentials.userType == "customer") {
-        const resultAction = await signinCustomer({
-          name: credentials.name,
-          password: credentials.password,
-          userType: credentials.userType,
-        });
-        dispatch(fetchCredit(resultAction.customerId));
+        const resultAction = await dispatch (signinCustomer({
+          email: credentials.email,
+          password: credentials.password
+        }));
+        console.log("---apna result---",resultAction);
+        dispatch(fetchCredit(resultAction.payload.customerId));
         navigate("/customer-dashboard");
       } else {
-        const resultAction = await signinMerchant({
-          name: credentials.name,
+        const resultAction = await dispatch (signinMerchant({
+          email: credentials.email,
           password: credentials.password,
-        });
+        }));
         navigate("/merchant-dashboard");
       }
     } catch (err) {

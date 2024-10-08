@@ -48,6 +48,7 @@ const getComparator = (order, orderBy) => {
 
 // Sorting the array based on comparator
 const sortedRows = (rows, comparator) => {
+  console.log("CURRENT ROWS",rows);
   const stabilizedRows = rows.map((el, index) => [el, index]);
   stabilizedRows.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -148,6 +149,7 @@ export const RestuarantMenuDetail = () => {
       return eachItem;
     });
     dispatch(addRestaurantDetails(updatedRestaurantData));
+    dispatch(getRestaurantDetails(restaurantId));
     handleCloseDialog();
     setIsConfirmedEdit(true);
   };
@@ -252,8 +254,7 @@ export const RestuarantMenuDetail = () => {
             </TableHead>
 
             <TableBody>
-              {memoizedRows
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              {memoizedRows?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
                   const isItemSelected = isSelected(row.id);
                   return (

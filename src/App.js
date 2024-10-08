@@ -9,17 +9,15 @@ import {
 } from "react-router-dom";
 import { AddRestaurantDetail } from "../src/pages/merchant/AddRestaurantDetail"; // Import the ProductList page
 import { RestuarantMenuDetail } from "../src/pages/merchant/RestuarantMenuDetail";
-import { ClientRestaurantMenuDetail } from "../src/pages/client/ClientRestaurantMenuDetail";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { NavigationBar } from "./components/NavigationBar";
-import { FoodOrderDetail } from "./pages/client/FoodOrderDetail";
-import { useSelector } from "react-redux";
 import { Login } from "./pages/Login";
 import Signup from "./pages/Signup";
 import CustomerDashboard from "./pages/client/CustomerDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MerchantDashboard from "./pages/merchant/MerchantDashboard";
 import Unauthorized from "./pages/Unauthorized";
+import RestaurantItems from "./pages/client/RestaurantItems";
 
 const theme = createTheme({
   typography: {
@@ -51,24 +49,15 @@ function App() {
             }
           />
 
-          <Route
-            path="/customer/restuarantlist"
-            element={
-              <ProtectedRoute requiredRole="customer">
-                <FoodOrderDetail />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/customer/restuarantlist/:restaurantid"
-            element={
-              <ProtectedRoute requiredRole="customer">
-                <ClientRestaurantMenuDetail />
-              </ProtectedRoute>
-            }
-          />
-
+          {/* Route for Restaurant Items */}
+        <Route
+          path="/restaurant/:restaurantId"
+          element={
+            <ProtectedRoute requiredRole="customer">
+              <RestaurantItems />
+            </ProtectedRoute>
+          }
+        />
 
           {/* Protected Routes for Merchants */}
           <Route

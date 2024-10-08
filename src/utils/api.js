@@ -82,13 +82,14 @@ export const postUpdatedMerchantRestaurantDetails = async (
 export const getClientCreditDetails = async (customerId) => {
   try {
     const response = await axiosInstance.get(
-      `/users/getCredit/{customerId}`
+      `/users/getCredit/${customerId}`
     );
     return response.data.restaurants;
   } catch (error) {
     console.log(error);
   }
 };
+
 export const getClientRestaurants = async (cityName) => {
   try {
     const response = await axiosInstance.get(
@@ -117,18 +118,19 @@ export const getClientRestaurantId = async (reastaurantId) => {
  *
  * @param {name, email, password} credentail
  */
-export const postSignInDetails = async (endpoint, credentail) => {
-  // const response = await axiosInstance.post(
-  //   endpoint,
-  //   credentials
-  // );
-  // return response.data;
+export const postSignInDetails = async (endpoint, credential) => {
+  const response = await axiosInstance.post(
+    endpoint,
+    credential
+  );
+  console.log("---apna response---",response);
+  return response.data;
 };
 
-export const postSignUpDetails = async (endpoint, credentials) => {
-  // const response = await axiosInstance.post(
-  //   endpoint,
-  //   credentials
-  // );
-  // return response.data;
+export const postSignUpDetails = async (endpoint, credential) => {
+  const response = await axiosInstance.post(
+    endpoint,
+    credential
+  );
+  return response.data;
 };

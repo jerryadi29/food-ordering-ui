@@ -45,7 +45,7 @@ export const merchantMenuDetailSlice = createSlice({
       })
       .addCase(getRestaurantDetails.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload, "payload====");
+        console.log(action.payload, "---payload---");
         state.details = action.payload;
       })
       .addCase(getRestaurantDetails.rejected, (state, action) => {

@@ -1,20 +1,15 @@
 // src/components/CustomerDashboard.js
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchCredit } from "../../features/customer/customerSlice";
-import { fetchRestaurants } from "../../features/customer/customerSlice";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchRestaurants } from '.../features/slices/restaurantsSlice';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Typography,
   Box,
   Button,
-  Grid,
-  Card,
-  CardContent,
-  CardActions,
-} from "@mui/material";
-import { FoodOrderDetail } from "../../pages/client/FoodOrderDetail";
+} from '@mui/material';
+import RestaurantList from './RestaurantList';
 
 const CustomerDashboard = () => {
   const dispatch = useDispatch();
@@ -25,24 +20,26 @@ const CustomerDashboard = () => {
   const restaurantsStatus = useSelector((state) => state.restaurants.status);
 
   useEffect(() => {
-    if (user && user.role === "customer") {
+    if (user && user.role === 'customer') {
       dispatch(fetchRestaurants(user.city));
     }
   }, [dispatch, user]);
 
+  const handleLogout = () => {
+    dispatch({ type: 'auth/logout' });
+    navigate('/login');
+  };
+
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 4 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>
         <Typography variant="h4">Welcome, {user.email}</Typography>
         <Box>
-          <Typography variant="h6">Credit: {credit}</Typography>
+          <Typography variant="h6">Credit: ₹{credit}</Typography>
           <Button
             variant="contained"
             color="secondary"
-            onClick={() => {
-              dispatch({ type: "auth/logout" });
-              navigate("/login");
-            }}
+            onClick={handleLogout}
             sx={{ mt: 1 }}
           >
             Logout
@@ -52,7 +49,7 @@ const CustomerDashboard = () => {
       <Typography variant="h5" gutterBottom>
         Restaurants in {user.city}
       </Typography>
-      <FoodOrderDetail />
+      <RestaurantList />
     </Container>
   );
 };

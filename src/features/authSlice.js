@@ -8,14 +8,14 @@ import {
 
 export const signinCustomer = createAsyncThunk(
   "auth/login",
-  async ({ username, password, city, userType }, thunkAPI) => {
-    const credentials = { username, password, city, userType };
+  async ({ email, password}, thunkAPI) => {
+    const credentials = { email, password};
     try {
       const response = await postSignInDetails(
         "/authentication/sign-in/customer",
         credentials
       );
-      return { ...response.data, userType: "customer" };
+      return { ...response, userType: "customer" };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -53,7 +53,7 @@ export const signinMerchant = createAsyncThunk(
           password,
         }
       );
-      return { ...response.data, userType: "merchant" };
+      return { ...response, userType: "merchant" };
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response.data.message || "Login Failed"
@@ -88,7 +88,7 @@ export const fetchCredit = createAsyncThunk(
   async (customerId, thunkAPI) => {
     try {
       const response = await getClientCreditDetails(
-        `/users/getCredit/${customerId}`
+        customerId
       );
       return response.data;
     } catch (error) {
@@ -155,12 +155,13 @@ export const authSlice = createSlice({
     builder.addCase(signinCustomer.fulfilled, (state, action) => {
       state.status = "succeeded";
       state.user = {
-        email: action.meta.arg.email,
+        email: action.payload.email,
         customerId: action.payload.customerId,
         city: action.payload.city,
         role: "customer",
       };
       // Save to localStorage
+      console.log("--hero aaya---",state)
       localStorage.setItem("user", JSON.stringify(state.user));
     });
     builder.addCase(signinCustomer.rejected, (state, action) => {
