@@ -19,7 +19,7 @@ import {
   IconButton,
 } from '@mui/material';
 import { AddShoppingCart, Visibility } from '@mui/icons-material';
-import { addToCart } from '../slices/cartSlice'; // Assuming you have a cartSlice
+import { addToCart } from '../../features/customer/cartSlice'; // Assuming you have a cartSlice
 
 const ItemList = () => {
   const dispatch = useDispatch();

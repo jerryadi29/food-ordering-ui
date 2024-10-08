@@ -27,14 +27,14 @@ const restaurantsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchRestaurants.pending, (state) => {
+      .addCase(fetchRestaurantsList.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(fetchRestaurants.fulfilled, (state, action) => {
+      .addCase(fetchRestaurantsList.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.restaurants = action.payload;
       })
-      .addCase(fetchRestaurants.rejected, (state, action) => {
+      .addCase(fetchRestaurantsList.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });

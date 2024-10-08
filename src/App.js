@@ -17,7 +17,7 @@ import CustomerDashboard from "./pages/client/CustomerDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MerchantDashboard from "./pages/merchant/MerchantDashboard";
 import Unauthorized from "./pages/Unauthorized";
-import ItemList from "./pages/client/Items";
+import ItemList from "../src/pages/client/ItemList";
 
 const theme = createTheme({
   typography: {

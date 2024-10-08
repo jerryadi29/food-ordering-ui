@@ -7,7 +7,7 @@ const RestaurantCard = ({ restaurant }) => {
   const navigate = useNavigate();
 
   const handleViewItems = () => {
-    navigate(`/restaurants/${restaurant.restaurantId}/items`);
+   navigate(`merchants/items/${restaurant.restaurantId}`);
   };
 
   return (
