@@ -17,7 +17,7 @@ import CustomerDashboard from "./pages/client/CustomerDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MerchantDashboard from "./pages/merchant/MerchantDashboard";
 import Unauthorized from "./pages/Unauthorized";
-import RestaurantItems from "./pages/client/RestaurantItems";
+import ItemList from "./pages/client/Items";
 
 const theme = createTheme({
   typography: {
@@ -54,7 +54,7 @@ function App() {
           path="/restaurant/:restaurantId"
           element={
             <ProtectedRoute requiredRole="customer">
-              <RestaurantItems />
+               <ItemList />
             </ProtectedRoute>
           }
         />
