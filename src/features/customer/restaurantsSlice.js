@@ -1,14 +1,15 @@
 // src/slices/restaurantsSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axiosInstance } from "../../utils/api";
+import {  getClientRestaurants } from "../../utils/api";
 
 // Fetch Restaurants by City
 export const fetchRestaurantsList = createAsyncThunk(
   "restaurants/fetchRestaurants",
   async (city, thunkAPI) => {
     try {
-      const response = await axiosInstance.get(`/users/get-restaurant/${city}`);
-      return response.data.restaurants;
+      const response = await getClientRestaurants(city);
+      console.log('menu response', response)
+      return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response.data.message || "Fetching Restaurants Failed"

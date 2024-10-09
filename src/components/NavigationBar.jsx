@@ -47,7 +47,7 @@ export const NavigationBar = () => {
   let pages = [];
   if (user) {
     if (user.userType == "client") {
-      pages = ["Select Restaurants", "Dashboard"];
+      pages = ["Dashboard"];
     } else {
       pages = ["Add Restaurant", "Dashboard"];
     }
