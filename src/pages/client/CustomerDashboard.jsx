@@ -21,7 +21,7 @@ const CustomerDashboard = () => {
       console.log("---customer dashboard inside user---",user);
       dispatch(fetchRestaurantsList(user.city));
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>

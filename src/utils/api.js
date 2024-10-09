@@ -3,6 +3,10 @@ import {
   restaurantDetails,
   clientRestaurantDetail,
   clientMenuDetail,
+  customerCreditResponse,
+  customerRestaurantItemResponse,
+  customerRestaurantListResponse,
+  customerSigninResponse,
 } from "./response";  
 
 export const axiosInstance = axios.create({
@@ -51,9 +55,9 @@ export const postMerchantRestaurantDetails = async (restaurantDetail) => {
 };
 
 export const fetchMerchantRestaurantDetails = async (restaurantId) => {
-  const response = await axiosInstance.get("/merchants/restaurants/" + restaurantId);
-  return response.data.restaurants
-  // return restaurantDetails.restaurants;
+  // const response = await axiosInstance.get("/merchants/restaurants/" + restaurantId);
+  // return response.data.restaurants
+  return restaurantDetails.restaurants;
 };
 
 export const postUpdatedMerchantRestaurantDetails = async (
@@ -69,7 +73,7 @@ export const postUpdatedMerchantRestaurantDetails = async (
         },
       }
     );
-    // return restaurantDetails.restaurants;
+    return response.restaurants;
   } catch (error) {
     console.log(error);
   }
@@ -85,6 +89,7 @@ export const getClientCreditDetails = async (customerId) => {
       `/users/getCredit/${customerId}`
     );
     return response.data.restaurants;
+    // return customerCreditResponse.credit
   } catch (error) {
     console.log(error);
   }
@@ -96,7 +101,7 @@ export const getClientRestaurants = async (cityName) => {
       `/users/get-restaurant/{cityName}`
     );
     return response.data.restaurants;
-    // return clientRestaurantDetail.restaurants;
+    // return customerRestaurantListResponse.restaurants;
   } catch (error) {
     console.log(error);
   }
@@ -108,7 +113,7 @@ export const getClientRestaurantId = async (reastaurantId) => {
       `/merchants/items/{restaurantId}`
     );
     return response.data.restaurants;
-    // return clientMenuDetail.restaurants;
+    // return customerRestaurantItemResponse.restaurants;
   } catch (error) {
     console.log(error);
   }
@@ -124,7 +129,7 @@ export const postSignInDetails = async (endpoint, credential) => {
     credential
   );
   console.log("---apna response---",response);
-  return response.data;
+  return response;
 };
 
 export const postSignUpDetails = async (endpoint, credential) => {
@@ -132,5 +137,5 @@ export const postSignUpDetails = async (endpoint, credential) => {
     endpoint,
     credential
   );
-  return response.data;
+  return response;
 };

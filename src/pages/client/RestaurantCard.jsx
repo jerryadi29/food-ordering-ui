@@ -1,13 +1,20 @@
 // src/components/RestaurantCard.js
-import React from 'react';
-import { Card, CardContent, CardActions, Typography, Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardActions,
+  Typography,
+  Button,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const RestaurantCard = ({ restaurant }) => {
   const navigate = useNavigate();
 
   const handleViewItems = () => {
-   navigate(`merchants/items/${restaurant.restaurantId}`);
+    console.log('restaurant.restaurantId', restaurant.restaurantId)
+    navigate(`/customer/items/${restaurant.restaurantId}`);
   };
 
   return (
@@ -26,11 +33,15 @@ const RestaurantCard = ({ restaurant }) => {
           Contact: {restaurant.contact}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Status: {restaurant.available ? 'Available' : 'Unavailable'}
+          Status: {restaurant.available ? "Available" : "Unavailable"}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={handleViewItems} disabled={!restaurant.available}>
+        <Button
+          size="small"
+          onClick={handleViewItems}
+          disabled={!restaurant.available}
+        >
           View Items
         </Button>
       </CardActions>
