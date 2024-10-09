@@ -1,5 +1,5 @@
 // src/App.js
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -18,6 +18,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import MerchantDashboard from "./pages/merchant/MerchantDashboard";
 import Unauthorized from "./pages/Unauthorized";
 import ItemList from "../src/pages/client/ItemList";
+import { useDispatch } from "react-redux";
+import {setUser} from '../src/features/authSlice'
+
 
 const theme = createTheme({
   typography: {
@@ -27,8 +30,15 @@ const theme = createTheme({
 });
 
 function App() {
-  // const {user} = useSelector((state) => state.auth)
-  const user = { userType: "client" };
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Check if user data exists in localStorage
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      dispatch(setUser(JSON.parse(storedUser)));
+    }
+  }, [dispatch]);
   return (
     <ThemeProvider theme={theme}>
       <Router>
