@@ -8,14 +8,14 @@ import {
 
 export const signinCustomer = createAsyncThunk(
   "auth/login",
-  async ({ email, password}, thunkAPI) => {
-    const credentials = { email, password};
+  async ({ email, password , city}, thunkAPI) => {
+    const credentials = { email, password, city};
     try {
       const response = await postSignInDetails(
         "/authentication/sign-in/customer",
         credentials
       );
-      return { ...response, userType: "customer" };
+      return { ...response, ...credentials,userType: "customer" };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -90,7 +90,8 @@ export const fetchCredit = createAsyncThunk(
       const response = await getClientCreditDetails(
         customerId
       );
-      return response.data;
+      return response;
+      console.log('credit response', response)
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response.data.message || "Fetching Credit Failed"
@@ -99,8 +100,7 @@ export const fetchCredit = createAsyncThunk(
   }
 );
 
-// Async thunk for user logout
-export const logout = createAsyncThunk("auth/logout", async () => {});
+
 
 export const authSlice = createSlice({
   name: "auth",
@@ -203,5 +203,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setUser } = authSlice.actions;
+export const { setUser, logout } = authSlice.actions;
 
