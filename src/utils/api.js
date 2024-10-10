@@ -88,7 +88,8 @@ export const getClientCreditDetails = async (customerId) => {
     const response = await axiosInstance.get(
       `/users/getCredit/${customerId}`
     );
-    return response.data.restaurants;
+    console.log("mera response",response)
+    return response.data.credit;
     // return customerCreditResponse.credit
   } catch (error) {
     console.log(error);
@@ -98,8 +99,9 @@ export const getClientCreditDetails = async (customerId) => {
 export const getClientRestaurants = async (cityName) => {
   try {
     const response = await axiosInstance.get(
-      `/users/get-restaurant/{cityName}`
+      `/users/get-restaurant/${cityName}`
     );
+    console.log("response -->",response);
     return response.data.restaurants;
     // return customerRestaurantListResponse.restaurants;
   } catch (error) {
@@ -107,10 +109,10 @@ export const getClientRestaurants = async (cityName) => {
   }
 };
 
-export const getClientRestaurantId = async (reastaurantId) => {
+export const getClientRestaurantId = async (restaurantId) => {
   try {
     const response = await axiosInstance.get(
-      `/merchants/items/{restaurantId}`
+      `/merchants/items/${restaurantId}`
     );
     return response.data.restaurants;
     // return customerRestaurantItemResponse.restaurants;

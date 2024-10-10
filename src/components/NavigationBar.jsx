@@ -14,6 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Home } from "../pages/Home";
+import { logout } from "../features/authSlice";
 
 export const NavigationBar = () => {
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ export const NavigationBar = () => {
   };
 
   const handleLogout = () => {
-    // dispatch(logout());
+    dispatch(logout());
     navigate("/login");
   };
 
