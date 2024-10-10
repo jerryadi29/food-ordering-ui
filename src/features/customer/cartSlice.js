@@ -1,19 +1,24 @@
 // src/slices/cartSlice.js
-import { createSlice } from '@reduxjs/toolkit';
-
-const initialState = {
-  items: [], // Array to hold cart items
-  restaurantId: null, // To ensure all items are from the same restaurant
-};
+import { createSlice } from "@reduxjs/toolkit";
 
 const cartSlice = createSlice({
-  name: 'cart', 
-  initialState: initialState,
+  name: "cart",
+  initialState: {
+    items: [], // Array to hold cart items
+    restaurantId: null, // To ensure all items are from the same restaurant
+  },
   reducers: {
     addToCart: (state, action) => {
-      const { id, itemName, price,  additionalCustomizations, restaurantId } = action.payload;
-      console.log(restaurantId)
-
+      const {
+        id,
+        itemName,
+        price,
+        quantityAvailable,
+        availableTime,
+        additionalCustomizations,
+        restaurantId,
+        quantity,
+      } = action.payload;
       // If cart is empty, set the restaurantId
       if (state.items.length === 0) {
         state.restaurantId = restaurantId;
@@ -22,7 +27,7 @@ const cartSlice = createSlice({
       // Ensure all items are from the same restaurant
       if (state.restaurantId !== restaurantId) {
         // Optionally, notify the user or reset the cart
-        alert('You can only order from one restaurant at a time.');
+        alert("You can only order from one restaurant at a time.");
         return;
       }
 
@@ -30,17 +35,29 @@ const cartSlice = createSlice({
       const existingItem = state.items.find(
         (item) =>
           item.id === id &&
-          JSON.stringify(item.additionalCustomizations) === JSON.stringify(additionalCustomizations)
+          JSON.stringify(item.additionalCustomizations) ===
+            JSON.stringify(additionalCustomizations)
       );
 
       if (existingItem) {
         existingItem.quantity += 1;
       } else {
-        state.items.push({ id, itemName, price, quantity: 1, additionalCustomizations: additionalCustomizations });
+        state.items.push({
+          id,
+          itemName,
+          availableTime,
+          price,
+          restaurantId,
+          quantityAvailable,
+          quantity: quantity,
+          additionalCustomizations: additionalCustomizations,
+        });
       }
     },
     removeFromCart: (state, action) => {
-      state.items = state.items.filter((item, index) => index !== action.payload);
+      state.items = state.items.filter(
+        (item, index) => index !== action.payload
+      );
 
       // If cart is empty, reset restaurantId
       if (state.items.length === 0) {
@@ -55,7 +72,7 @@ const cartSlice = createSlice({
     },
     decrementQuantity: (state, action) => {
       const item = state.items[action.payload];
-      if (item && item.quantity > 1) {
+      if (item && item.quantity >= 1) {
         item.quantity -= 1;
       }
     },

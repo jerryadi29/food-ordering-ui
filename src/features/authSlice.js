@@ -156,8 +156,8 @@ export const authSlice = createSlice({
       state.status = "succeeded";
       state.user = {
         email: action.payload.email,
-        customerId: action.payload.customerId,
-        city: action.payload.city,
+        customerId: action.payload.data.customerId,
+        city: action.payload.data.city,
         role: "customer",
       };
       // Save to localStorage
@@ -204,4 +204,3 @@ export const authSlice = createSlice({
 });
 
 export const { setUser, logout } = authSlice.actions;
-

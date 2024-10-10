@@ -5,6 +5,7 @@ import { authSlice } from "../features/authSlice";
 import restaurantsReducer from '../features/customer/restaurantsSlice';
 import itemsReducer from '../features/customer/itemsSlice';
 import  cartReducer from "../features/customer/cartSlice";
+import orderReducer from '../features/customer/orderSlice'
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     merchantMenuDetail: merchantMenuDetailSlice.reducer,
     restaurants: restaurantsReducer,
     items: itemsReducer,
-    cart : cartReducer
+    cart : cartReducer,
+    order: orderReducer
   },
 });

@@ -21,6 +21,7 @@ import ItemList from "../src/pages/client/ItemList";
 import { useDispatch } from "react-redux";
 import { setUser } from "../src/features/authSlice";
 import Cart from "./pages/client/Cart";
+import { OrderStatus } from "./pages/client/OrderStatus";
 
 const theme = createTheme({
   typography: {
@@ -78,6 +79,13 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route path ='/customer/items/:restaurantId/order-status/:orderId' element={
+            <ProtectedRoute requiredRole="customer">
+              <NavigationBar/>
+              <OrderStatus/>
+            </ProtectedRoute>
+          }/>
 
           {/* Protected Routes for Merchants */}
           <Route

@@ -1,5 +1,5 @@
 // src/components/ItemList.js
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchItems, clearItems } from "../../features/customer/itemsSlice";
 import { useParams, useNavigate } from "react-router-dom";
@@ -18,8 +18,12 @@ import {
   Tooltip,
   IconButton,
 } from "@mui/material";
+import {
+  decrementQuantity,
+  incrementQuantity,
+} from "../../features/customer/itemsSlice";
 import { AddShoppingCart, Visibility } from "@mui/icons-material";
-import { addToCart, decrementQuantity, incrementQuantity } from "../../features/customer/cartSlice"; // Assuming you have a cartSlice
+import { addToCart } from "../../features/customer/cartSlice"; // Assuming you have a cartSlice
 
 const ItemList = () => {
   const dispatch = useDispatch();
@@ -45,8 +49,17 @@ const ItemList = () => {
     navigate(-1); // Navigate back to the previous page
   };
 
+  const handleIncreament = (item, index) => {
+    if (item.quantity >= item.maxQuantityPerOrder) {
+      return;
+    }
+    dispatch(incrementQuantity(index));
+  };
+  const handleDecreament = (index) => {
+    dispatch(decrementQuantity(index));
+  };
+
   const handleAddToCart = (item) => {
-    console.log('item list addtocart',item)
     dispatch(addToCart(item));
     // Optionally, show a success message or snackbar
     alert(`Added ${item.itemName} to cart!`);
@@ -87,7 +100,7 @@ const ItemList = () => {
             </Typography>
           ) : (
             <Grid container spacing={4}>
-              {items.map((item) => (
+              {items.map((item, index) => (
                 <Grid item key={item.id} xs={12} sm={6} md={4}>
                   <Card
                     sx={{
@@ -118,7 +131,7 @@ const ItemList = () => {
                       </Box>
 
                       {/* Quantity and Time */}
-                      <Box sx={{ mt: 1 }}>
+                      {/* <Box sx={{ mt: 1 }}>
                         <Typography variant="body2">
                           Quantity Available: {item.quantityAvailable}{" "}
                           {item.quantityUnit}
@@ -132,44 +145,57 @@ const ItemList = () => {
                       </Box>
 
                       {/* Additional Customizations */}
-                      {item.additionalCustomizations && (
+                      {/* {item.additionalCustomizations && (
                         <Box sx={{ mt: 1 }}>
                           <Typography variant="body2" color="text.secondary">
                             Customizations: {item.additionalCustomizations}
                           </Typography>
                         </Box>
-                      )}
+                      )}  */}
                     </CardContent>
-                    <CardActions sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <CardActions
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
                         <Button
                           variant="outlined"
                           size="small"
-                          onClick={() => dispatch(decrementQuantity(item.id))}
-                          disabled={item.quantity === 1}
+                          onClick={() => handleDecreament(index)}
                         >
                           -
                         </Button>
-                        <Typography sx={{ mx: 2 }}>{item.quantity || 1}</Typography>
+                        <Typography sx={{ mx: 2 }}>{item.quantity}</Typography>
                         <Button
                           variant="outlined"
                           size="small"
-                          onClick={() => dispatch(incrementQuantity(item.id))}
+                          onClick={() => handleIncreament(item, index)}
                         >
                           +
                         </Button>
                       </Box>
-                      <Tooltip title={item.available ? 'Add to Cart' : 'Item Unavailable'}>
+                      <Tooltip
+                        title={
+                          item.available ? "Add to Cart" : "Item Unavailable"
+                        }
+                      >
                         <span>
                           <Button
                             size="small"
                             variant="contained"
-                            color="primary"
-                            startIcon={<AddShoppingCart />}
+                            color={item.available ? "info" : "error"}
+                            startIcon={
+                              item.available ? <AddShoppingCart /> : null
+                            }
                             onClick={() => handleAddToCart(item)}
-                            disabled={!item.available}
+                            disabled={!item.available || item.quantity === 0}
                           >
-                            Add to Cart
+                            {item.available
+                              ? `Add to Cart`
+                              : `Item is Unavailable`}
                           </Button>
                         </span>
                       </Tooltip>
@@ -181,6 +207,7 @@ const ItemList = () => {
           )}
         </>
       )}
+      <></>
     </Container>
   );
 };
