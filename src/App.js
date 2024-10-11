@@ -19,8 +19,8 @@ import MerchantDashboard from "./pages/merchant/MerchantDashboard";
 import Unauthorized from "./pages/Unauthorized";
 import ItemList from "../src/pages/client/ItemList";
 import { useDispatch } from "react-redux";
-import {setUser} from '../src/features/authSlice'
-
+import { setUser } from "../src/features/authSlice";
+import Cart from "./pages/client/Cart";
 
 const theme = createTheme({
   typography: {
@@ -34,7 +34,7 @@ function App() {
 
   useEffect(() => {
     // Check if user data exists in localStorage
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
       dispatch(setUser(JSON.parse(storedUser)));
     }
@@ -42,8 +42,6 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <NavigationBar />
-
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/signup" element={<Signup />} />
@@ -54,26 +52,39 @@ function App() {
             path="/customer-dashboard"
             element={
               <ProtectedRoute requiredRole="customer">
+                  <NavigationBar />
                 <CustomerDashboard />
               </ProtectedRoute>
             }
           />
 
           {/* Route for Restaurant Items */}
-        <Route
-          path="/customer/items/:restaurantId"
-          element={
-            <ProtectedRoute requiredRole="customer">
-               <ItemList />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/customer/items/:restaurantId"
+            element={
+              <ProtectedRoute requiredRole="customer">
+                  <NavigationBar />
+                <ItemList />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute requiredRole="customer">
+                  <NavigationBar />
+                <Cart />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Protected Routes for Merchants */}
           <Route
             path="/merchant-dashboard"
             element={
               <ProtectedRoute requiredRole="merchant">
+                  <NavigationBar />
                 <MerchantDashboard />
               </ProtectedRoute>
             }
@@ -84,6 +95,7 @@ function App() {
             path="/merchants/addRestaurant/:restaurantId"
             element={
               <ProtectedRoute requiredRole="merchant">
+                  <NavigationBar />
                 <RestuarantMenuDetail />
               </ProtectedRoute>
             }
@@ -93,6 +105,7 @@ function App() {
             path="/merchants/addRestaurant"
             element={
               <ProtectedRoute requiredRole="merchant">
+                  <NavigationBar />
                 <AddRestaurantDetail />
               </ProtectedRoute>
             }

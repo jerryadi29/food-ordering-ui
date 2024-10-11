@@ -36,12 +36,14 @@ const CustomerDashboard = () => {
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome, {user.email}
-        </Typography>
-        <Typography variant="h2" sx={{}}>
-          Your Credit <AccountBalanceOutlinedIcon /> :  ₹{credit}{" "}
-        </Typography>
+        <Card  sx={{boxShadow: '1.2px 1.5px 1.5px'}}>
+          <Typography variant="h3" gutterBottom>
+            Welcome, {user.email}
+          </Typography>
+          <Typography variant="h3" sx={{}}>
+            Your Wallet <AccountBalanceOutlinedIcon /> : {credit}{" "}
+          </Typography>
+        </Card>
       </Box>
       <Box sx={{ mb: 2 }}>
         <Typography variant="h5">

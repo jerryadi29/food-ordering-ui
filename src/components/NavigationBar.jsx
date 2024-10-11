@@ -15,15 +15,28 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Home } from "../pages/Home";
 import { logout } from "../features/authSlice";
+import { ShoppingCart } from "@mui/icons-material";
+import { Badge } from "@mui/material";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+
 
 export const NavigationBar = () => {
   const dispatch = useDispatch();
-  const user = { userType: "client" };
+  const user = { userType: "customer" };
   //   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  const cartRestaurantId = useSelector((state) => state.cart?.restaurantId || null);
+  const cartItems = useSelector((state) => state.cart?.items || []);
+  const totalCartItems = Array.isArray(cartItems)
+    ? cartItems.reduce((acc, item) => acc + item.quantity, 0)
+    : 0;
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const handleCartClick = () => {
+    navigate('/cart');
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -47,7 +60,7 @@ export const NavigationBar = () => {
 
   let pages = [];
   if (user) {
-    if (user.userType == "client") {
+    if (user.userType == "customer") {
       pages = ["Dashboard"];
     } else {
       pages = ["Add Restaurant", "Dashboard"];
@@ -186,6 +199,13 @@ export const NavigationBar = () => {
                 </Button>
               ))}
             </Box>
+
+            <IconButton color="inherit" onClick={handleCartClick}>
+          <Badge  color="secondary">
+            <ShoppingCartIcon />
+          </Badge>
+        </IconButton>
+           
 
             {/* User Avatar and Settings */}
             {user && (
