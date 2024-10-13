@@ -7,7 +7,8 @@ import {
   customerRestaurantItemResponse,
   customerRestaurantListResponse,
   customerSigninResponse,
-} from "./response";  
+  customerPlacedOrderStatus
+} from "./response";
 
 export const axiosInstance = axios.create({
   baseURL: "http://localhost:9090/food-ordering",
@@ -83,13 +84,26 @@ export const postUpdatedMerchantRestaurantDetails = async (
  * Client API
  */
 
+export const getPlacePlaceOrder = async (orderId) => {
+  try {
+    const response = await axiosInstance.get(
+      `http://localhost:9090/food-ordering/users/order/${orderId}`
+    );
+    return response;
+  } catch (error) {
+    console.log(error)
+  }
+  // console.log(customerPlacedOrderStatus)
+  // return customerPlacedOrderStatus
+};
+
 export const getClientCreditDetails = async (customerId) => {
   try {
     // const response = await axiosInstance.get(
     //   `/users/getCredit/${customerId}`
     // );
     // return response.credit;
-    return customerCreditResponse.credit
+    return customerCreditResponse.credit;
   } catch (error) {
     console.log(error);
   }
@@ -137,5 +151,5 @@ export const postSignUpDetails = async (endpoint, credential) => {
   //   endpoint,
   //   credential
   // );
-  return 'response';
+  return "response";
 };

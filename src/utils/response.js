@@ -393,7 +393,7 @@ export const customerRestaurantItemResponse ={
           "restaurantId": 10,
           "itemName": "Luchi-Alur Dom",
           "description": "Fried flatbreads (luchi) served with spiced potato curry (alur dom)",
-          "quantityAvailable": 1,
+          "quantityAvailable": 10,
           "quantityUnit": "plates",
           "price": "120\t",
           "additionalCustomizations": "Extra curry, less oily",
@@ -402,4 +402,27 @@ export const customerRestaurantItemResponse ={
           "available": true
       }
   ]
+}
+
+// customer placed order
+export const customerPlacedOrderStatus = {
+  "orderItems": [
+      {
+          "itemName": "Rosogolla",
+          "itemQuantity": 2,
+          "itemPrice": 100,
+          "itemTotalPrice": 200
+      },
+      {
+          "itemName": "Mishti Doi",
+          "itemQuantity": 3,
+          "itemPrice": 60,
+          "itemTotalPrice": 180
+      }
+  ],
+  "date": "04/10/2024",
+  "time": "16:02:28",
+  "status": "ACCEPTED",
+  "totalValue": 380,
+  "dateInEpochTimeMillis": 1728037948961
 }

@@ -12,20 +12,22 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Home } from "../pages/Home";
 import { logout } from "../features/authSlice";
 import { ShoppingCart } from "@mui/icons-material";
 import { Badge } from "@mui/material";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 export const NavigationBar = () => {
   const dispatch = useDispatch();
   const user = { userType: "customer" };
   //   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-  const cartRestaurantId = useSelector((state) => state.cart?.restaurantId || null);
+  const { pathname } = useLocation();
+  const cartRestaurantId = useSelector(
+    (state) => state.cart?.restaurantId || null
+  );
   const cartItems = useSelector((state) => state.cart?.items || []);
   const totalCartItems = Array.isArray(cartItems)
     ? cartItems.reduce((acc, item) => acc + item.quantity, 0)
@@ -35,7 +37,7 @@ export const NavigationBar = () => {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handleCartClick = () => {
-    navigate('/cart');
+    navigate("/cart");
   };
 
   const handleOpenNavMenu = (event) => {
@@ -100,6 +102,7 @@ export const NavigationBar = () => {
         break;
     }
   };
+
 
   return (
     <>
@@ -200,12 +203,17 @@ export const NavigationBar = () => {
               ))}
             </Box>
 
-            <IconButton color="inherit" onClick={handleCartClick}>
-          <Badge  color="secondary">
-            <ShoppingCartIcon />
-          </Badge>
-        </IconButton>
-           
+            {pathname.localeCompare(
+              `/customer/items/${cartRestaurantId}/order-status`
+            ) === 0 ? (
+              <></>
+            ) : (
+              <IconButton color="inherit" onClick={handleCartClick}>
+                <Badge badgeContent={totalCartItems} color="secondary">
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
+            )}
 
             {/* User Avatar and Settings */}
             {user && (

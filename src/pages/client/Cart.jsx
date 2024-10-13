@@ -31,14 +31,16 @@ import {
 } from "../../features/customer/cartSlice";
 // import axios from "../api/axiosConfig"; // Ensure axios is configured
 import { useNavigate } from "react-router-dom";
+import { fetchPlacedOrder } from "../../features/customer/orderSlice";
 
 const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.items);
   const cartRestaurantId = useSelector((state) => state.cart.restaurantId);
-  const userId = useSelector((state) => state.auth.user.id); // Assuming user ID is stored here
-
+  const userId = useSelector((state) => state.auth.user.id);
+  // Assuming user ID is stored here
+  console.log(cartRestaurantId, "cartRestaurantId ====");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
@@ -78,19 +80,23 @@ const Cart = () => {
     }));
 
     try {
-      //   const response = await axios.post(
-      //     `http://localhost:9090/food-ordering/users/order/${cartRestaurantId}/${userId}`,
-      //     payload
-      //   );
+      const response = await axios.post(
+        `http://localhost:9090/food-ordering/users/order/${cartRestaurantId}/${userId}`,
+        payload
+      );
 
-      const response = { status: 200 };
-
+      
+      /// {status: 200 , orderId :18}
       // Assuming a successful response status
       if (response.status === 200 || response.status === 201) {
         setSnackbarMessage("Order placed successfully!");
         setOpenSnackbar(true);
         dispatch(clearCart());
-        navigate("/customer-dashboard");
+        dispatch(fetchPlacedOrder(response.orderId));
+
+        navigate(
+          `/customer/items/${cartRestaurantId}/order-status/${response.orderId}`
+        );
       }
     } catch (error) {
       console.error(error);
@@ -116,6 +122,9 @@ const Cart = () => {
     setOpenSnackbar(true);
     navigate("/customer-dashboard");
   };
+  const handleBack = () => {
+    navigate(-1); // Navigate back to the previous page
+  };
 
   // Calculate total price
   const totalPrice = cartItems.reduce(
@@ -125,6 +134,11 @@ const Cart = () => {
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+      <Box sx={{ mb: 4 }}>
+        <Button variant="outlined" onClick={handleBack}>
+          Back to Items List
+        </Button>
+      </Box>
       {/* Snackbar for Notifications */}
       <Snackbar
         open={openSnackbar}
@@ -184,8 +198,19 @@ const Cart = () => {
                     <Grid container spacing={2}>
                       <Grid item xs={12} sm={6}>
                         <Typography variant="h6">{item?.itemName}</Typography>
+
+                        <Box sx={{ mt: 1 }}>
+                          <Typography variant="body2">
+                            Quantity Available: {item.quantityAvailable}{" "}
+                            {item.quantityUnit}
+                          </Typography>
+                          <Typography variant="body2">
+                            Available Time: {item.availableTime}
+                          </Typography>
+                        </Box>
                         {/* Display Customizations */}
-                        {Object.keys(item.additionalCustomizations).length > 0 && (
+                        {/* {Object.keys(item.additionalCustomizations).length >
+                          0 && (
                           <Box sx={{ mt: 1 }}>
                             <Typography variant="subtitle2">
                               Customizations:
@@ -204,7 +229,7 @@ const Cart = () => {
                               )
                             )}
                           </Box>
-                        )}
+                        )} */}
                       </Grid>
                       <Grid item xs={12} sm={6}>
                         <Typography variant="body1">
