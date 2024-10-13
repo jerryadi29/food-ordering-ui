@@ -8,7 +8,10 @@ export const fetchItems = createAsyncThunk(
   async (restaurantId, { rejectWithValue }) => {
     try {
       const response = await getClientRestaurantId(restaurantId);
-      return response; // Assuming 'restaurants' contains the items
+      const initialQuantityResponse = response.map((eachItem)=>{
+        return {...eachItem, quantity: 0}
+      })
+      return initialQuantityResponse; // Assuming 'restaurants' contains the items
     } catch (error) {
       return rejectWithValue(error.response.data.message || 'Failed to fetch items');
     }
@@ -28,6 +31,19 @@ const itemsSlice = createSlice({
       state.status = 'idle';
       state.error = null;
     },
+    incrementQuantity: (state, action) => {
+      const item = state.list[action.payload];
+      if (item) {
+        item.quantity += 1;
+      }
+    },
+    decrementQuantity: (state, action) => {
+      console.log(state)
+      const item = state.list[action.payload];
+      if (item && item.quantity >= 1) {
+        item.quantity -= 1;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -45,6 +61,7 @@ const itemsSlice = createSlice({
   },
 });
 
-export const { clearItems } = itemsSlice.actions;
+
+export const { clearItems, incrementQuantity,decrementQuantity  } = itemsSlice.actions;
 
 export default itemsSlice.reducer;
