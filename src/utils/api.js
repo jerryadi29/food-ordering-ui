@@ -84,12 +84,13 @@ export const postUpdatedMerchantRestaurantDetails = async (
  * Client API
  */
 
-export const getPlacePlaceOrder = async (orderId) => {
+export const getPlaceOrder = async (orderId) => {
   try {
     const response = await axiosInstance.get(
-      `http://localhost:9090/food-ordering/users/order/${orderId}`
+      `/users/order/${orderId}`
     );
-    return response;
+    console.log("DEBUG response", response)
+    return response.data;
   } catch (error) {
     console.log(error)
   }
@@ -138,18 +139,18 @@ export const getClientRestaurantId = async (restaurantId) => {
  * @param {name, email, password} credentail
  */
 export const postSignInDetails = async (endpoint, credential) => {
-  // const response = await axiosInstance.post(
-  //   endpoint,
-  //   credential
-  // );
-  // console.log("---apna response---",response);
-  return customerSigninResponse;
+  const response = await axiosInstance.post(
+    endpoint,
+    credential
+  );
+  console.log("---apna response---",response);
+  return response;
 };
 
 export const postSignUpDetails = async (endpoint, credential) => {
-  // const response = await axiosInstance.post(
-  //   endpoint,
-  //   credential
-  // );
-  return "response";
+  const response = await axiosInstance.post(
+    endpoint,
+    credential
+  );
+  return response;
 };

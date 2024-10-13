@@ -1,6 +1,7 @@
 // src/components/Cart.js
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import axios from 'axios'
 import {
   Container,
   Typography,
@@ -31,14 +32,14 @@ import {
 } from "../../features/customer/cartSlice";
 // import axios from "../api/axiosConfig"; // Ensure axios is configured
 import { useNavigate } from "react-router-dom";
-import { fetchPlacedOrder } from "../../features/customer/orderSlice";
+import { fetchPlacedOrder, getPlacedOrder } from "../../features/customer/orderSlice";
 
 const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.items);
   const cartRestaurantId = useSelector((state) => state.cart.restaurantId);
-  const userId = useSelector((state) => state.auth.user.id);
+  const userId = useSelector((state) => state.auth.user.customerId);
   // Assuming user ID is stored here
   console.log(cartRestaurantId, "cartRestaurantId ====");
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -84,18 +85,21 @@ const Cart = () => {
         `http://localhost:9090/food-ordering/users/order/${cartRestaurantId}/${userId}`,
         payload
       );
+      console.log("OrderId response",response)
 
       
       /// {status: 200 , orderId :18}
       // Assuming a successful response status
-      if (response.status === 200 || response.status === 201) {
+      if (response.data.status === "200") {
         setSnackbarMessage("Order placed successfully!");
         setOpenSnackbar(true);
         dispatch(clearCart());
-        dispatch(fetchPlacedOrder(response.orderId));
+        console.log("OrderId", response.data.orderId)
+        dispatch(getPlacedOrder(response.data.orderId));
 
+        console.log("OrderId response Id : ",response.data.orderId)
         navigate(
-          `/customer/items/${cartRestaurantId}/order-status/${response.orderId}`
+          `/customer/items/${cartRestaurantId}/order-status/${response.data.orderId}`
         );
       }
     } catch (error) {
