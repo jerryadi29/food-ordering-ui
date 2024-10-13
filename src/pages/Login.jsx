@@ -58,7 +58,7 @@ export const Login = () => {
           password: credentials.password
         }));
         console.log("---apna result---",resultAction);
-        dispatch(fetchCredit(resultAction.payload.customerId));
+        dispatch(fetchCredit(resultAction.payload.data.customerId));
         navigate("/customer-dashboard");
       } else {
         const resultAction = await dispatch (signinMerchant({

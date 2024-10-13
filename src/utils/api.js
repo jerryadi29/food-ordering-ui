@@ -99,11 +99,10 @@ export const getPlacePlaceOrder = async (orderId) => {
 
 export const getClientCreditDetails = async (customerId) => {
   try {
-    // const response = await axiosInstance.get(
-    //   `/users/getCredit/${customerId}`
-    // );
-    // return response.credit;
-    return customerCreditResponse.credit;
+    const response = await axiosInstance.get(
+      `/users/getCredit/${customerId}`
+    );
+    return response.data.credit;
   } catch (error) {
     console.log(error);
   }
@@ -111,23 +110,24 @@ export const getClientCreditDetails = async (customerId) => {
 
 export const getClientRestaurants = async (cityName) => {
   try {
-    // const response = await axiosInstance.get(
-    //   `/users/get-restaurant/{cityName}`
-    // );
-    // return response.data.restaurants;
-    return customerRestaurantListResponse.restaurants;
+    const response = await axiosInstance.get(
+      `/users/get-restaurant/${cityName}`
+    );
+    console.log("response -->",response);
+    return response.data.restaurants;
+    // return customerRestaurantListResponse.restaurants;
   } catch (error) {
     console.log(error);
   }
 };
 
-export const getClientRestaurantId = async (reastaurantId) => {
+export const getClientRestaurantId = async (restaurantId) => {
   try {
-    // const response = await axiosInstance.get(
-    //   `/merchants/items/{restaurantId}`
-    // );
-    // return response.data.restaurants;
-    return customerRestaurantItemResponse.restaurants;
+    const response = await axiosInstance.get(
+      `/merchants/items/${restaurantId}`
+    );
+    return response.data.restaurants;
+    // return customerRestaurantItemResponse.restaurants;
   } catch (error) {
     console.log(error);
   }
