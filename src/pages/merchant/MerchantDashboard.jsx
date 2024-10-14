@@ -9,6 +9,8 @@ import {
   Button,
 } from '@mui/material';
 
+
+
 const MerchantDashboard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -18,7 +20,7 @@ const MerchantDashboard = () => {
     <Container maxWidth="lg" sx={{ mt: 4 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>
         <Typography variant="h4">Welcome, {user.email}</Typography>
-        <Button
+        {/* <Button
           variant="contained"
           color="secondary"
           onClick={() => {
@@ -27,7 +29,7 @@ const MerchantDashboard = () => {
           }}
         >
           Logout
-        </Button>
+        </Button> */}
       </Box>
       <Typography variant="h5" gutterBottom>
         Merchant Dashboard

@@ -65,7 +65,7 @@ export const Login = () => {
           email: credentials.email,
           password: credentials.password,
         }));
-        navigate("/merchant-dashboard");
+          navigate("/merchants/addRestaurant");
       }
     } catch (err) {
       console.error("Login Failed:", err);
@@ -86,7 +86,7 @@ export const Login = () => {
       if (parsedUser.role === "customer") {
         navigate("/customer-dashboard");
       } else if (parsedUser.role === "merchant") {
-        navigate("/merchant-dashboard");
+        navigate("/merchants/addRestaurant");
       }
     }
   }, [navigate]);
