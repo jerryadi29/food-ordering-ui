@@ -1,13 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axiosInstance ,postMerchantRestaurantDetails } from "../../utils/api";
+import { axiosInstance ,fetchMerchantRestaurantDetails,postMerchantRestaurantDetails } from "../../utils/api";
 import {restaurantListData}  from '../../utils/response'
 
 
 export const getRestaurants = createAsyncThunk(
   "merchant/getRestaurants",
   async (merchantId) => {
-    // const response = await axiosInstance.get(`${merchantId}`); //api will return actaul data once its ready
-    // return  response.data.restaurants;
+    // const response = await fetchMerchantRestaurantDetails(merchantId); //api will return actaul data once its ready
+    // return  response;
     return restaurantListData.restaurants
   }
 );

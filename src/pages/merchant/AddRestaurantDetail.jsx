@@ -30,6 +30,7 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
+
 // Modal box styling
 const modalStyle = {
   position: "absolute",
@@ -44,7 +45,8 @@ const modalStyle = {
 };
 
 export const AddRestaurantDetail = () => {
-  const { id } = useParams(); // Get the merchant id
+  const { merchantId } = useSelector((state) => state.auth.user);
+  // Get the merchant merchantId
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { restaurants, loading, error } = useSelector(
@@ -65,10 +67,10 @@ export const AddRestaurantDetail = () => {
 
   // Fetch restaurants when component mounts
   useEffect(() => {
-    if (id) {
-      dispatch(getRestaurants(id));
+    if (merchantId) {
+      dispatch(getRestaurants(merchantId));
     }
-  }, [dispatch, id]);
+  }, [dispatch, merchantId]);
 
   // Handle opening/closing the modal
   const handleOpenModal = () => setOpenModal(true);
@@ -100,7 +102,7 @@ export const AddRestaurantDetail = () => {
         description: formData.description,
         address: formData.address,
         contact: formData.contact,
-        merchantId: id, // Add merchantId
+        merchantId: merchantId, // Add merchantId
       })
     );
 
@@ -114,7 +116,7 @@ export const AddRestaurantDetail = () => {
     // Dispatch the action
     dispatch(addRestaurant(formDataToSend));
 
-    await dispatch(getRestaurants(id));
+    await dispatch(getRestaurants(merchantId));
 
     handleCloseModal(); // Close the modal after submission
   };
@@ -122,8 +124,8 @@ export const AddRestaurantDetail = () => {
   //navigate to restaurant details page
   const navigateToRestaurantDetailPage = (restaurantId) => {
     console.log(restaurantId);
-    navigate(`/merchants/items/${restaurantId}`, {
-      state: { from: `/merchants/restaurants/${id}` }, // Pass the previous URL in state
+    navigate(`/merchants/addRestaurant/${restaurantId}`, {
+      state: { from: `/merchants/restaurants/${restaurantId}` }, // Pass the previous URL in state
     });
   };
 
@@ -249,7 +251,7 @@ export const AddRestaurantDetail = () => {
                 >
                   Upload Menu File
                   <VisuallyHiddenInput
-                    id="fileInput"
+                    merchantId="fileInput"
                     type="file"
                     name="menuFile"
                     onChange={handleFileChange} // Handle file change

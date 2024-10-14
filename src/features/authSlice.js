@@ -176,7 +176,7 @@ export const authSlice = createSlice({
     builder.addCase(signinMerchant.fulfilled, (state, action) => {
       state.status = "succeeded";
       state.user = {
-        email: action.meta.arg.email,
+        email: action.payload.email,
         merchantId: action.payload.merchantId,
         role: "merchant",
       };

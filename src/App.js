@@ -88,15 +88,15 @@ function App() {
           }/>
 
           {/* Protected Routes for Merchants */}
-          <Route
+          {/* <Route
             path="/merchant-dashboard"
             element={
               <ProtectedRoute requiredRole="merchant">
                   <NavigationBar />
-                <MerchantDashboard />
+            
               </ProtectedRoute>
             }
-          />
+          /> */}
 
           {/* Route for Restaurant Items */}
           <Route
@@ -114,6 +114,8 @@ function App() {
             element={
               <ProtectedRoute requiredRole="merchant">
                   <NavigationBar />
+                  <MerchantDashboard />
+
                 <AddRestaurantDetail />
               </ProtectedRoute>
             }
