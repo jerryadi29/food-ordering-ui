@@ -7,7 +7,8 @@ import {
   customerRestaurantItemResponse,
   customerRestaurantListResponse,
   customerSigninResponse,
-} from "./response";  
+  customerPlacedOrderStatus
+} from "./response";
 
 export const axiosInstance = axios.create({
   baseURL: "http://localhost:9090/food-ordering",
@@ -83,14 +84,26 @@ export const postUpdatedMerchantRestaurantDetails = async (
  * Client API
  */
 
+export const getPlaceOrder = async (orderId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/users/order/${orderId}`
+    );
+    console.log("DEBUG response", response)
+    return response.data;
+  } catch (error) {
+    console.log(error)
+  }
+  // console.log(customerPlacedOrderStatus)
+  // return customerPlacedOrderStatus
+};
+
 export const getClientCreditDetails = async (customerId) => {
   try {
     const response = await axiosInstance.get(
       `/users/getCredit/${customerId}`
     );
-    console.log("mera response",response)
     return response.data.credit;
-    // return customerCreditResponse.credit
   } catch (error) {
     console.log(error);
   }
