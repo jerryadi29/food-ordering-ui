@@ -104,7 +104,6 @@ function App() {
             element={
               <ProtectedRoute requiredRole="merchant">
                   <NavigationBar />
-                  <NavigationBar />
                 <RestuarantMenuDetail />
               </ProtectedRoute>
             }
